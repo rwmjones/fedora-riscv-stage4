@@ -92,7 +92,7 @@ boot-stage4-full-fat-in-qemu: stage4-full-fat-disk.img
 # Upload the new stage4 disk image.
 upload-stage4: stage4-disk.img.xz stage4-full-fat-disk.img.xz $(vmlinux)
 	scp $^ fedorapeople.org:/project/risc-v/disk-images/
-	scp upload.readme fedorapeople.org:/project/risc-v/disk-images/readme.txt
+	scp upload-readme fedorapeople.org:/project/risc-v/disk-images/readme.txt
 
 clean:
 	rm -f poweroff
