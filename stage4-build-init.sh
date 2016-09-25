@@ -94,7 +94,6 @@ $tdnf -y --installroot /var/tmp/mnt install \
      procps-ng \
      rootfiles \
      rpm \
-     rpm-build \
      selinux-policy-targeted \
      setup \
      sudo \
