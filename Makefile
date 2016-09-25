@@ -26,6 +26,7 @@ old_stage4 = old-stage4-disk.img
 all: stage4-disk.img.xz stage4-full-fat-disk.img.xz
 
 stage4-disk.img.xz: stage4-disk.img
+	rm -f $@
 	xz --best -k $^
 
 stage4-disk.img: stage4-builder.img stage4-temporary-init.sh poweroff local.repo
@@ -65,6 +66,7 @@ poweroff: poweroff.c
 # This is just for convenience.  Once we get networking fixed, we
 # should stop building this.
 stage4-full-fat-disk.img.xz: stage4-full-fat-disk.img
+	rm -f $@
 	xz --best -k $^
 
 stage4-full-fat-disk.img: stage4-disk.img
