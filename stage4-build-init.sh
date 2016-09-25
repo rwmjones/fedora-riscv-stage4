@@ -71,41 +71,55 @@ $tdnf repolist
 # I have added some which were needed for tdnf, or which are
 # generally useful to have in the stage4.
 $tdnf -y --installroot /var/tmp/mnt install \
+     audit \
      authconfig \
      basesystem \
      bash \
      coreutils \
      cronie \
      curl \
+     dhcp-client \
+     dnf \
+     dnf-plugins-core \
+     dracut-config-generic \
+     dracut-config-rescue \
      e2fsprogs \
      expat \
      filesystem \
+     firewalld \
      glibc \
      glib2 \
      gpgme \
      grep \
+     grubby \
      hostname \
+     initial-setup \
+     initscripts \
+     iproute \
+     iputils \
+     kbd \
      less \
      libgpg-error \
      man-db \
      ncurses \
+     NetworkManager \
+     openssh-clients \
+     openssh-server \
+     parted \
      passwd \
+     plymouth \
      policycoreutils \
      procps-ng \
      rootfiles \
      rpm \
      selinux-policy-targeted \
      setup \
+     shadow-utils \
      sudo \
+     systemd \
      tdnf \
      util-linux \
      vim-minimal
-# missing: audit dhcp-client dnf grubby initscripts
-# iproute iputils kbd openssh-clients openssh-server
-# parted plymouth shadow-utils systemd
-# dnf-plugins-core dracut-config-rescue firewalld
-# NetworkManager ppc64-utils dracut-config-generic
-# initial-setup
 
 # Disk image is built, so move it to the final filename.
 # guestfish downloads this, but if it doesn't exist, guestfish
