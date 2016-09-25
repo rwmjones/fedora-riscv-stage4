@@ -21,9 +21,9 @@ $ qemu-system-riscv -m 4G -kernel /usr/bin/bbl \
     -append vmlinux \
     -drive file=stage4-disk.img,format=raw -nographic
 
-To install packages inside the VM, use eg:
+To install packages inside the VM, use 'tdnf', eg:
 
-$ tdnf --installver 25 install glib2-devel
+# tdnf --releasever 25 install pcre-devel
 
 For sources, see https://fedorapeople.org/groups/risc-v/SRPMS/
 
