@@ -1,0 +1,116 @@
+#!/bin/bash -
+# Init script installed in stage3 disk image.
+
+# Set up the PATH.  The GCC path is a hack because I wasn't able to
+# find the right flags for configuring GCC.
+PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+export PATH
+
+# Root filesystem is mounted as ro, remount it as rw.
+mount -o remount,rw /
+
+# Mount standard filesystems.
+mount -t proc /proc /proc
+mount -t sysfs /sys /sys
+mount -t tmpfs -o "nosuid,size=20%,mode=0755" tmpfs /run
+mkdir -p /run/lock
+
+# XXX devtmpfs
+
+# Initialize dynamic linker cache.
+ldconfig /usr/lib64 /usr/lib /lib64 /lib
+
+# Fix owner of umount binary.
+chown root.root /usr/bin/umount
+
+# There is no hardware clock, just ensure the date is not miles out.
+date `date -r /init +%m%d%H%M%Y`
+
+hostname stage4-builder
+echo stage4-builder.fedoraproject.org > /etc/hostname
+
+echo
+echo "This is the stage4 disk image automatic builder"
+echo
+
+# Cleanup function called on failure or exit.
+cleanup ()
+{
+    set +e
+    # Sync disks and shut down.
+    sync
+    sleep 5
+    sync
+    mount -o remount,ro / >&/dev/null
+    poweroff
+}
+trap cleanup INT QUIT TERM EXIT ERR
+
+set -e
+set -x
+
+rm -f /var/tmp/stage4-disk.img
+rm -f /var/tmp/stage4-disk.img-t
+rm -rf /var/tmp/mnt
+
+# Create a template disk image.
+truncate -s 20G /var/tmp/stage4-disk.img-t
+mkfs -t ext4 /var/tmp/stage4-disk.img-t
+
+# Create the installroot.
+mkdir /var/tmp/mnt
+mount -o loop /var/tmp/stage4-disk.img-t /var/tmp/mnt
+rpm --root /var/tmp/mnt --initdb
+
+# Run tdnf to install packages into the installroot.
+tdnf="tdnf --releasever 25"
+$tdnf repolist
+
+# For the list of core packages, see <id>core</id> in:
+# https://pagure.io/fedora-comps/blob/master/f/comps-f25.xml.in
+# I have added some which were needed for tdnf, or which are
+# generally useful to have in the stage4.
+$tdnf -y --installroot /var/tmp/mnt install \
+     authconfig \
+     basesystem \
+     bash \
+     coreutils \
+     cronie \
+     curl \
+     e2fsprogs \
+     expat \
+     filesystem \
+     glibc \
+     glib2 \
+     gpgme \
+     grep \
+     hostname \
+     less \
+     libgpg-error \
+     man-db \
+     ncurses \
+     passwd \
+     policycoreutils \
+     procps-ng \
+     rootfiles \
+     rpm \
+     rpm-build \
+     selinux-policy-targeted \
+     setup \
+     sudo \
+     tdnf \
+     util-linux \
+     vim-minimal
+# missing: audit dhcp-client dnf grubby initscripts
+# iproute iputils kbd openssh-clients openssh-server
+# parted plymouth shadow-utils systemd
+# dnf-plugins-core dracut-config-rescue firewalld
+# NetworkManager ppc64-utils dracut-config-generic
+# initial-setup
+
+# Disk image is built, so move it to the final filename.
+# guestfish downloads this, but if it doesn't exist, guestfish
+# fails indicating the earlier error.
+mv /var/tmp/stage4-disk.img-t /var/tmp/stage4-disk.img
+
+# cleanup() is called automatically here.

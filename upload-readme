@@ -1,0 +1,36 @@
+The stage4 disk image is built cleanly from RPMs with no broken
+dependencies and only three files which are not known to RPM (/init,
+/usr/bin/poweroff and /etc/yum.repos.d/local.repo, all three will be
+replaced when we have systemd and networking).
+
+stage4-disk.img is the usual minimal disk image.
+
+stage4-full-fat-disk.img is the same as stage4-disk.img, plus it
+contains all the RPMs available at the time the disk image was built.
+This is useful while we don't have networking because it means you can
+use 'tdnf' to install RPMs on request, but when we have networking
+this image will be dropped (because you'll be able to pull the
+packages from the repo at https://fedorapeople.org/groups/risc-v/RPMS)
+
+To boot this you will need the qemu-system-riscv from COPR:
+
+# dnf copr enable rjones/riscv
+# dnf install riscv-qemu riscv-pk
+
+$ qemu-system-riscv -m 4G -kernel /usr/bin/bbl \
+    -append vmlinux \
+    -drive file=stage4-disk.img,format=raw -nographic
+
+To install packages inside the VM, use eg:
+
+$ tdnf --installver 25 install glib2-devel
+
+For sources, see https://fedorapeople.org/groups/risc-v/SRPMS/
+
+For kernel source, see
+https://github.com/rwmjones/fedora-riscv/blob/master/Makefile
+https://github.com/rwmjones/fedora-riscv/tree/master/stage3-kernel
+
+For everything else, please read:
+
+https://fedoraproject.org/wiki/Architectures/RISC-V
