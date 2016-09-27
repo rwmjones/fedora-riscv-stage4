@@ -28,6 +28,7 @@ all: stage4-disk.img.xz stage4-full-fat-disk.img.xz
 stage4-disk.img.xz: stage4-disk.img
 	rm -f $@
 	xz --best -k $^
+	ls -lh $@
 
 stage4-disk.img: stage4-builder.img stage4-temporary-init.sh poweroff local.repo
 	rm -f $@ $@-t
@@ -68,6 +69,7 @@ poweroff: poweroff.c
 stage4-full-fat-disk.img.xz: stage4-full-fat-disk.img
 	rm -f $@
 	xz --best -k $^
+	ls -lh $@
 
 stage4-full-fat-disk.img: stage4-disk.img
 	rm -f $@ $@-t
