@@ -1,8 +1,7 @@
 #!/bin/bash -
 # Init script installed in stage3 disk image.
 
-# Set up the PATH.  The GCC path is a hack because I wasn't able to
-# find the right flags for configuring GCC.
+# Set up the PATH.
 PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
 export PATH
 
