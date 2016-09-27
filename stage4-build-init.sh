@@ -83,6 +83,7 @@ tdnf -y --installroot /var/tmp/mnt install \
      dracut-config-rescue \
      e2fsprogs \
      expat \
+     fedora-release \
      filesystem \
      firewalld \
      glibc \
