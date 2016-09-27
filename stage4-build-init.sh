@@ -68,7 +68,10 @@ tdnf repolist
 # https://pagure.io/fedora-comps/blob/master/f/comps-f25.xml.in
 # I have added some which were needed for tdnf, or which are
 # generally useful to have in the stage4.
-tdnf -y --installroot /var/tmp/mnt install \
+#
+# We need --releasever here because fedora-release isn't
+# installed inside the chroot.
+tdnf --releasever 25 -y --installroot /var/tmp/mnt install \
      audit \
      authconfig \
      basesystem \
