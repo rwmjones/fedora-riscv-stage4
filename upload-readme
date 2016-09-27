@@ -23,7 +23,7 @@ $ qemu-system-riscv -m 4G -kernel /usr/bin/bbl \
 
 To install packages inside the VM, use 'tdnf', eg:
 
-# tdnf --releasever 25 install pcre-devel
+# tdnf install pcre-devel
 
 For sources, see https://fedorapeople.org/groups/risc-v/SRPMS/
 

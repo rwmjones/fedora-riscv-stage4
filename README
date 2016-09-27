@@ -34,7 +34,7 @@ wget) and copy it into the disk image:
 
 Inside the disk image, install packages by doing:
 
-  tdnf --releasever 25 install rpm-build
+  tdnf install rpm-build
 
 In the future, tdnf will be replaced by full dnf, and the need to copy
 the RPMs directory in will be replaced by network access to the

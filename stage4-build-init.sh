@@ -62,14 +62,13 @@ mount -o loop /var/tmp/stage4-disk.img-t /var/tmp/mnt
 rpm --root /var/tmp/mnt --initdb
 
 # Run tdnf to install packages into the installroot.
-tdnf="tdnf --releasever 25"
-$tdnf repolist
+tdnf repolist
 
 # For the list of core packages, see <id>core</id> in:
 # https://pagure.io/fedora-comps/blob/master/f/comps-f25.xml.in
 # I have added some which were needed for tdnf, or which are
 # generally useful to have in the stage4.
-$tdnf -y --installroot /var/tmp/mnt install \
+tdnf -y --installroot /var/tmp/mnt install \
      audit \
      authconfig \
      basesystem \
