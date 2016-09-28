@@ -72,8 +72,6 @@ tdnf repolist
 # We need --releasever here because fedora-release isn't
 # installed inside the chroot.
 tdnf --releasever 25 -y --installroot /var/tmp/mnt install \
-     audit \
-     authconfig \
      basesystem \
      bash \
      coreutils \
@@ -117,11 +115,17 @@ tdnf --releasever 25 -y --installroot /var/tmp/mnt install \
      selinux-policy-targeted \
      setup \
      shadow-utils \
-     sudo \
      systemd \
      tdnf \
      util-linux \
      vim-minimal
+# Temporarily omitted:
+#    audit
+# nothing provides systemd-sysv needed by audit-2.6.7-1.fc25.0.riscv64.riscv64
+#    authconfig
+# nothing provides policycoreutils needed by authconfig-6.2.10-14.fc25.riscv64
+#    sudo
+# nothing provides /usr/bin/vi needed by sudo-1.8.18-1.fc25.0.riscv64.riscv64
 
 # Disk image is built, so move it to the final filename.
 # guestfish downloads this, but if it doesn't exist, guestfish
