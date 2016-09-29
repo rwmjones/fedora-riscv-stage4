@@ -59,6 +59,10 @@ mkfs -t ext4 /var/tmp/stage4-disk.img-t
 # Create the installroot.
 mkdir /var/tmp/mnt
 mount -o loop /var/tmp/stage4-disk.img-t /var/tmp/mnt
+mkdir /var/tmp/mnt/{dev,proc,sys}
+mount -o bind /dev /var/tmp/mnt/dev
+mount -o bind /proc /var/tmp/mnt/proc
+mount -o bind /sys /var/tmp/mnt/sys
 rpm --root /var/tmp/mnt --initdb
 
 # Run tdnf to install packages into the installroot.
