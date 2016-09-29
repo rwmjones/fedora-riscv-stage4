@@ -65,9 +65,6 @@ mount -o bind /proc /var/tmp/mnt/proc
 mount -o bind /sys /var/tmp/mnt/sys
 rpm --root /var/tmp/mnt --initdb
 
-# Run tdnf to install packages into the installroot.
-tdnf repolist
-
 # For the list of core packages, see <id>core</id> in:
 # https://pagure.io/fedora-comps/blob/master/f/comps-f25.xml.in
 # I have added some which were needed for tdnf, or which are
@@ -75,54 +72,39 @@ tdnf repolist
 #
 # We need --releasever here because fedora-release isn't
 # installed inside the chroot.
-tdnf --releasever 25 -y --installroot /var/tmp/mnt install \
+dnf --releasever 25 -y --installroot /var/tmp/mnt install \
      basesystem \
      bash \
      coreutils \
      cronie \
      curl \
-     dhcp-client \
      dnf \
      dnf-plugins-core \
-     dracut-config-generic \
-     dracut-config-rescue \
      e2fsprogs \
      expat \
      fedora-release \
      filesystem \
-     firewalld \
      glibc \
      glib2 \
      gpgme \
      grep \
-     grubby \
      hostname \
-     initial-setup \
      initscripts \
-     iproute \
      iputils \
      kbd \
      less \
      libgpg-error \
-     man-db \
      ncurses \
-     NetworkManager \
      openssh-clients \
      openssh-server \
-     parted \
-     passwd \
-     plymouth \
-     policycoreutils \
      procps-ng \
      rootfiles \
      rpm \
-     selinux-policy-targeted \
      setup \
      shadow-utils \
      systemd \
      tdnf \
-     util-linux \
-     vim-minimal
+     util-linux
 # Temporarily omitted:
 #    audit
 # nothing provides systemd-sysv needed by audit-2.6.7-1.fc25.0.riscv64.riscv64
@@ -130,6 +112,23 @@ tdnf --releasever 25 -y --installroot /var/tmp/mnt install \
 # nothing provides policycoreutils needed by authconfig-6.2.10-14.fc25.riscv64
 #    sudo
 # nothing provides /usr/bin/vi needed by sudo-1.8.18-1.fc25.0.riscv64.riscv64
+#
+# Omitted because we don't have builds for them yet:
+#     dhcp-client
+#     dracut-config-generic
+#     dracut-config-rescue
+#     firewalld
+#     grubby
+#     initial-setup
+#     iproute
+#     man-db
+#     NetworkManager
+#     parted
+#     passwd
+#     plymouth
+#     policycoreutils
+#     selinux-policy-targeted
+#     vim-minimal
 
 # Do some configuration within the chroot.
 
