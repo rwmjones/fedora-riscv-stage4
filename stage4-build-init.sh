@@ -131,6 +131,12 @@ tdnf --releasever 25 -y --installroot /var/tmp/mnt install \
 #    sudo
 # nothing provides /usr/bin/vi needed by sudo-1.8.18-1.fc25.0.riscv64.riscv64
 
+# Do some configuration within the chroot.
+
+# Disable public repos, they don't serve riscv64 packages anyway.
+chroot /var/tmp/mnt \
+       dnf config-manager --set-disabled updates updates-testing fedora
+
 # Disk image is built, so move it to the final filename.
 # guestfish downloads this, but if it doesn't exist, guestfish
 # fails indicating the earlier error.
