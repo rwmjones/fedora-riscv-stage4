@@ -31,8 +31,8 @@ stage4-disk.img.xz: stage4-disk.img
 	ls -lh $@
 
 stage4-disk.img: stage4-builder.img stage4-temporary-init.sh poweroff local.repo
-	rm -f $@ $@-t
-	$(MAKE) boot-in-qemu DISK=stage4-builder.img
+	rm -f $@ $@-t build.log
+	$(MAKE) boot-in-qemu DISK=stage4-builder.img |& tee build.log
 # Copy out the new stage4.
 	virt-cat -a stage4-builder.img /var/tmp/stage4-disk.img > $@-t
 # Upload the fixed files into the image.
@@ -95,6 +95,7 @@ boot-stage4-full-fat-in-qemu: stage4-full-fat-disk.img
 upload-stage4: stage4-disk.img.xz stage4-full-fat-disk.img.xz $(vmlinux)
 	scp $^ fedorapeople.org:/project/risc-v/disk-images/
 	scp upload-readme fedorapeople.org:/project/risc-v/disk-images/readme.txt
+	scp build.log fedorapeople.org:/project/risc-v/disk-images/readme.txt
 
 clean:
 	rm -f poweroff
