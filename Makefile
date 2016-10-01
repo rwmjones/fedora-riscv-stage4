@@ -89,12 +89,16 @@ boot-in-qemu: $(DISK) $(vmlinux)
 	    -append $(vmlinux) \
 	    -drive file=$(DISK),format=raw -nographic
 
-# Boot new stage4 in qemu (useful for testing).
+# Boot new stage4 in qemu (for testing, does not alter the original).
 boot-stage4-in-qemu: stage4-disk.img
-	$(MAKE) boot-in-qemu DISK=$<
+	cp $< $<.test
+	$(MAKE) boot-in-qemu DISK=$<.test
+	rm $<.test
 
 boot-stage4-full-fat-in-qemu: stage4-full-fat-disk.img
-	$(MAKE) boot-in-qemu DISK=$<
+	cp $< $<.test
+	$(MAKE) boot-in-qemu DISK=$<.test
+	rm $<.test
 
 # Upload the new stage4 disk image.
 upload-stage4: stage4-disk.img.xz stage4-full-fat-disk.img.xz
