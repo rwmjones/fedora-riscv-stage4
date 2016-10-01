@@ -28,8 +28,7 @@ To install packages inside the VM, use dnf, eg:
 For sources, see https://fedorapeople.org/groups/risc-v/SRPMS/
 
 For kernel source, see
-https://github.com/rwmjones/fedora-riscv/blob/master/Makefile
-https://github.com/rwmjones/fedora-riscv/tree/master/stage3-kernel
+https://github.com/rwmjones/fedora-riscv-kernel
 
 For everything else, please read:
 

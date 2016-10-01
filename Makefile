@@ -12,7 +12,12 @@ rpmsdir    = /mnt/dev/fedora-riscv-autobuild/RPMS
 # using recursive wget and point to your local copy of it here:
 #rpmsdir   = RPMS
 
-# Kernel, get this from https://fedorapeople.org/groups/risc-v/disk-images/
+# Kernel.
+#
+# Either download this from:
+#   https://fedorapeople.org/groups/risc-v/disk-images/
+# or build it from:
+#   https://github.com/rwmjones/fedora-riscv-kernel
 vmlinux    = vmlinux
 
 # Existing stage4 is needed to build a new one.  Get a working stage4
@@ -92,7 +97,7 @@ boot-stage4-full-fat-in-qemu: stage4-full-fat-disk.img
 	$(MAKE) boot-in-qemu DISK=$<
 
 # Upload the new stage4 disk image.
-upload-stage4: stage4-disk.img.xz stage4-full-fat-disk.img.xz $(vmlinux)
+upload-stage4: stage4-disk.img.xz stage4-full-fat-disk.img.xz
 	scp $^ fedorapeople.org:/project/risc-v/disk-images/
 	scp upload-readme fedorapeople.org:/project/risc-v/disk-images/readme.txt
 	scp build.log fedorapeople.org:/project/risc-v/disk-images/
