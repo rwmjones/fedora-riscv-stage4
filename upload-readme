@@ -8,7 +8,7 @@ stage4-disk.img is the usual minimal disk image.
 stage4-full-fat-disk.img is the same as stage4-disk.img, plus it
 contains all the RPMs available at the time the disk image was built.
 This is useful while we don't have networking because it means you can
-use 'tdnf' to install RPMs on request, but when we have networking
+use 'dnf' to install RPMs on request, but when we have networking
 this image will be dropped (because you'll be able to pull the
 packages from the repo at https://fedorapeople.org/groups/risc-v/RPMS)
 
@@ -21,9 +21,9 @@ $ qemu-system-riscv -m 4G -kernel /usr/bin/bbl \
     -append vmlinux \
     -drive file=stage4-disk.img,format=raw -nographic
 
-To install packages inside the VM, use 'tdnf', eg:
+To install packages inside the VM, use dnf, eg:
 
-# tdnf install pcre-devel
+# dnf install pcre-devel
 
 For sources, see https://fedorapeople.org/groups/risc-v/SRPMS/
 

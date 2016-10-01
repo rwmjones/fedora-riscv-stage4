@@ -25,8 +25,8 @@ once we have built systemd.  The repo file will go once we have
 hardware or an emulator that supports networking.
 
 The image is minimal, so it doesn't have things like gcc, rpmbuild,
-etc.  However you can install them from RPMs using the 'tdnf' program.
-Because there is no networking, you need to download
+etc.  However you can install them from RPMs using 'dnf'.  Because
+there is no networking, you need to download
 https://fedorapeople.org/groups/risc-v/RPMS/ (eg. using a recursive
 wget) and copy it into the disk image:
 
@@ -34,11 +34,10 @@ wget) and copy it into the disk image:
 
 Inside the disk image, install packages by doing:
 
-  tdnf install rpm-build
+  dnf install rpm-build
 
-In the future, tdnf will be replaced by full dnf, and the need to copy
-the RPMs directory in will be replaced by network access to the
-repository.
+In the future the need to copy the RPMs directory in will be replaced
+by network access to the repository.
 
 To boot the VM, use one of the following commands:
 
