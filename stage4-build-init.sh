@@ -67,8 +67,12 @@ rpm --root /var/tmp/mnt --initdb
 
 # For the list of core packages, see <id>core</id> in:
 # https://pagure.io/fedora-comps/blob/master/f/comps-f25.xml.in
+#
 # I have added some which were needed for tdnf, or which are
 # generally useful to have in the stage4.
+#
+# Adding glibc-langpack-en avoids the huge glibc-all-langpacks
+# being used.
 #
 # We need --releasever here because fedora-release isn't
 # installed inside the chroot.
@@ -85,6 +89,7 @@ dnf --releasever 25 -y --installroot /var/tmp/mnt install \
      fedora-release \
      filesystem \
      glibc \
+     glibc-langpack-en \
      glib2 \
      gpgme \
      grep \
