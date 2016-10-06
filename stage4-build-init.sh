@@ -88,6 +88,7 @@ dnf --releasever 25 -y --installroot /var/tmp/mnt install \
      glib2 \
      gpgme \
      grep \
+     grubby \
      hostname \
      initscripts \
      iputils \
@@ -112,13 +113,13 @@ dnf --releasever 25 -y --installroot /var/tmp/mnt install \
 # nothing provides policycoreutils needed by authconfig-6.2.10-14.fc25.riscv64
 #    sudo
 # nothing provides /usr/bin/vi needed by sudo-1.8.18-1.fc25.0.riscv64.riscv64
+#    firewalld
+# nothing provides python3-dbus needed by python3-firewall-0.4.3.3-1.fc25.noarch
 #
 # Omitted because we don't have builds for them yet:
 #     dhcp-client
 #     dracut-config-generic
 #     dracut-config-rescue
-#     firewalld
-#     grubby
 #     initial-setup
 #     iproute
 #     man-db
