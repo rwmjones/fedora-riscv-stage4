@@ -1,6 +1,5 @@
 The stage4 disk image is built cleanly from RPMs with no broken
-dependencies and only two files which are not known to RPM (/init and
-/etc/yum.repos.d/local.repo, both will eventually be removed).
+dependencies and only a tiny number of modifications (see below).
 
 To boot this you will need the qemu-system-riscv from COPR:
 
@@ -15,19 +14,36 @@ To install packages inside the VM, use dnf, eg:
 
   # dnf install pcre-devel
 
-How this won't work unless your system has networking support (not in
-QEMU).  Without networking you will need to shut down the VM, download
-the repository from https://fedorapeople.org/groups/risc-v/RPMS/
-(eg. using a recursive 'wget'), and then copy them into the disk
-image:
+You may need to edit /etc/yum.repos.d/local.repo
 
-  $ virt-copy-in -a stage4-disk.img /your/copy/of/RPMS /var/tmp
+DNF won't work unless your system has networking support (not
+available in QEMU).  Without networking you will need to shut down the
+VM, download the whole repository from
+https://fedorapeople.org/groups/risc-v/RPMS/ (eg. using a recursive
+'wget'), and then copy them into the disk image:
 
-For sources, see https://fedorapeople.org/groups/risc-v/SRPMS/
+  $ guestfish -a stage4-disk.img -m /dev/sda
+  ><fs> copy-in -a stage4-disk.img /your/copy/of/RPMS /var/tmp
+  ><fs> exit
 
-For kernel source, see
-https://github.com/rwmjones/fedora-riscv-kernel
+DNF aggressively caches stuff.  After changing the RPMs, if DNF
+doesn't seem to see the new packages, try doing:
+
+  # dnf clean all
+
+For sources, see:
+
+  https://fedorapeople.org/groups/risc-v/SRPMS/
+
+For kernel source, see:
+
+  https://github.com/rwmjones/fedora-riscv-kernel
 
 For everything else, please read:
 
-https://fedoraproject.org/wiki/Architectures/RISC-V
+  https://fedoraproject.org/wiki/Architectures/RISC-V
+
+To see how the image was generated from RPMs and modified after the
+RPMs were installed, see:
+
+  https://github.com/rwmjones/fedora-riscv-stage4/blob/master/stage4-build-init.sh

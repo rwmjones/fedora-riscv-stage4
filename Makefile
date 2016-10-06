@@ -36,29 +36,24 @@ stage4-disk.img.xz: stage4-disk.img
 	xz --best -k $^
 	ls -lh $@
 
-stage4-disk.img: stage4-builder.img local.repo
+stage4-disk.img: stage4-builder.img
 	rm -f $@ $@-t build.log
 	$(MAKE) boot-in-qemu DISK=stage4-builder.img |& tee build.log
 # Copy out the new stage4.
 	virt-cat -a stage4-builder.img /var/tmp/stage4-disk.img > $@-t
-# Upload the fixed files into the image.
-	guestfish -a $@-t -i \
-	    ln-sf /usr/lib/systemd/systemd /init : \
-	    upload local.repo /etc/yum.repos.d/local.repo : \
-	    chmod 0644 /etc/yum.repos.d/local.repo
 # Sparsify it.
 	virt-sparsify --inplace $@-t
 	mv $@-t $@
 
 # This is the modified stage4 which builds a new stage4.
-stage4-builder.img: $(old_stage4) stage4-build-init.sh
+stage4-builder.img: $(old_stage4) stage4-build-init.sh riscv-set-date.service root-shell.service local.repo
 	rm -f $@ $@-t
 	cp $< $@-t
 	guestfish -a $@-t -i \
 	    rm-f /init : \
 	    upload stage4-build-init.sh /init : \
 	    chmod 0755 /init : \
-	    copy-in $(rpmsdir) /var/tmp : \
+	    copy-in $(rpmsdir) riscv-set-date.service root-shell.service local.repo /var/tmp : \
 	    upload local.repo /etc/yum.repos.d/local.repo : \
 	    chmod 0644 /etc/yum.repos.d/local.repo
 	mv $@-t $@

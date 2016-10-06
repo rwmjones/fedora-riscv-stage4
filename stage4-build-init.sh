@@ -138,9 +138,39 @@ dnf --releasever 25 -y --installroot /var/tmp/mnt install \
 
 # Do some configuration within the chroot.
 
+# Write an fstab for the chroot.
+cat > /var/tmp/mnt/etc/fstab <<EOF
+/dev/htifblk0 / ext4 defaults 0 0
+EOF
+
+# Set the hostname.
+echo stage4.fedoraproject.org > /var/tmp/mnt/etc/hostname
+
+# Copy local.repo in.
+cp /var/tmp/local.repo /var/tmp/mnt/etc/yum.repos.d
+
+# Set up /init (in the chroot) as a symlink.
+pushd /var/tmp/mnt
+ln -s usr/lib/systemd/systemd init
+popd
+
+# Add the riscv-set-date systemd service.
+cp /var/tmp/riscv-set-date.service /var/tmp/mnt/etc/systemd/system/
+chroot /var/tmp/mnt \
+       systemctl enable riscv-set-date
+
+# Add the root-shell systemd service.
+cp /var/tmp/root-shell.service /var/tmp/mnt/etc/systemd/system/
+chroot /var/tmp/mnt \
+       systemctl enable root-shell
+
 # Disable public repos, they don't serve riscv64 packages anyway.
 chroot /var/tmp/mnt \
        dnf config-manager --set-disabled updates updates-testing fedora
+
+# Unmount the chroot.  Unfortunately some processes are still running
+# in the chroot, so we can't do that.
+sync
 
 # Disk image is built, so move it to the final filename.
 # guestfish downloads this, but if it doesn't exist, guestfish
