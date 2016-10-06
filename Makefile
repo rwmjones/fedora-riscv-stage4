@@ -28,7 +28,8 @@ old_stage4 = old-stage4-disk.img
 # End of configuration.
 #----------------------------------------------------------------------
 
-all: stage4-disk.img.xz stage4-full-fat-disk.img.xz
+all: stage4-disk.img.xz
+#stage4-full-fat-disk.img.xz
 
 stage4-disk.img.xz: stage4-disk.img
 	rm -f $@
@@ -101,7 +102,8 @@ boot-stage4-full-fat-in-qemu: stage4-full-fat-disk.img
 	rm $<.test
 
 # Upload the new stage4 disk image.
-upload-stage4: stage4-disk.img.xz stage4-full-fat-disk.img.xz
+upload-stage4: stage4-disk.img.xz
+#stage4-full-fat-disk.img.xz
 	scp $^ fedorapeople.org:/project/risc-v/disk-images/
 	scp upload-readme fedorapeople.org:/project/risc-v/disk-images/readme.txt
 	scp build.log fedorapeople.org:/project/risc-v/disk-images/
