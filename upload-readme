@@ -1,7 +1,6 @@
 The stage4 disk image is built cleanly from RPMs with no broken
-dependencies and only three files which are not known to RPM (/init,
-/usr/bin/poweroff and /etc/yum.repos.d/local.repo, all three will be
-replaced when we have systemd and networking).
+dependencies and only two files which are not known to RPM (/init and
+/etc/yum.repos.d/local.repo, both will eventually be removed).
 
 To boot this you will need the qemu-system-riscv from COPR:
 

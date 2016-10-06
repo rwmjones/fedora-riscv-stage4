@@ -36,17 +36,14 @@ stage4-disk.img.xz: stage4-disk.img
 	xz --best -k $^
 	ls -lh $@
 
-stage4-disk.img: stage4-builder.img stage4-temporary-init.sh poweroff local.repo
+stage4-disk.img: stage4-builder.img local.repo
 	rm -f $@ $@-t build.log
 	$(MAKE) boot-in-qemu DISK=stage4-builder.img |& tee build.log
 # Copy out the new stage4.
 	virt-cat -a stage4-builder.img /var/tmp/stage4-disk.img > $@-t
 # Upload the fixed files into the image.
 	guestfish -a $@-t -i \
-	    upload stage4-temporary-init.sh /init : \
-	    chmod 0755 /init : \
-	    upload poweroff /usr/bin/poweroff : \
-	    chmod 0755 /usr/bin/poweroff : \
+	    ln-sf /usr/lib/systemd/systemd /init : \
 	    upload local.repo /etc/yum.repos.d/local.repo : \
 	    chmod 0644 /etc/yum.repos.d/local.repo
 # Sparsify it.
@@ -58,16 +55,13 @@ stage4-builder.img: $(old_stage4) stage4-build-init.sh
 	rm -f $@ $@-t
 	cp $< $@-t
 	guestfish -a $@-t -i \
+	    rm-f /init : \
 	    upload stage4-build-init.sh /init : \
 	    chmod 0755 /init : \
 	    copy-in $(rpmsdir) /var/tmp : \
 	    upload local.repo /etc/yum.repos.d/local.repo : \
 	    chmod 0644 /etc/yum.repos.d/local.repo
 	mv $@-t $@
-
-# Poweroff program.
-poweroff: poweroff.c
-	/usr/bin/riscv64-unknown-linux-gnu-gcc --sysroot=/usr/sysroot $^ -o $@
 
 # The "full-fat" variant contains all the RPMs at time of building.
 # This is just for convenience.  Once we get networking fixed, we
@@ -109,7 +103,6 @@ upload-stage4: stage4-disk.img.xz
 	scp build.log fedorapeople.org:/project/risc-v/disk-images/
 
 clean:
-	rm -f poweroff
 	rm -f stage4-builder.img
 	rm -f *-t
 	rm -f *~
