@@ -29,7 +29,6 @@ old_stage4 = old-stage4-disk.img
 #----------------------------------------------------------------------
 
 all: stage4-disk.img.xz
-#stage4-full-fat-disk.img.xz
 
 stage4-disk.img.xz: stage4-disk.img
 	rm -f $@
@@ -58,21 +57,6 @@ stage4-builder.img: $(old_stage4) stage4-build-init.sh riscv-set-date.service ro
 	    chmod 0644 /etc/yum.repos.d/local.repo
 	mv $@-t $@
 
-# The "full-fat" variant contains all the RPMs at time of building.
-# This is just for convenience.  Once we get networking fixed, we
-# should stop building this.
-stage4-full-fat-disk.img.xz: stage4-full-fat-disk.img
-	rm -f $@
-	xz --best -k $^
-	ls -lh $@
-
-stage4-full-fat-disk.img: stage4-disk.img
-	rm -f $@ $@-t
-	cp $< $@-t
-	guestfish -a $@-t -i \
-		copy-in $(rpmsdir) /var/tmp
-	mv $@-t $@
-
 # Boot $(DISK) in qemu.
 boot-in-qemu: $(DISK) $(vmlinux)
 	qemu-system-riscv -m 4G -kernel /usr/bin/bbl \
@@ -85,14 +69,8 @@ boot-stage4-in-qemu: stage4-disk.img
 	$(MAKE) boot-in-qemu DISK=$<.test
 	rm $<.test
 
-boot-stage4-full-fat-in-qemu: stage4-full-fat-disk.img
-	cp $< $<.test
-	$(MAKE) boot-in-qemu DISK=$<.test
-	rm $<.test
-
 # Upload the new stage4 disk image.
 upload-stage4: stage4-disk.img.xz
-#stage4-full-fat-disk.img.xz
 	scp $^ fedorapeople.org:/project/risc-v/disk-images/
 	scp upload-readme fedorapeople.org:/project/risc-v/disk-images/readme.txt
 	scp build.log fedorapeople.org:/project/risc-v/disk-images/
