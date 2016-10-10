@@ -168,6 +168,10 @@ chroot /var/tmp/mnt \
 chroot /var/tmp/mnt \
        dnf config-manager --set-disabled updates updates-testing fedora
 
+# List all the packages which were installed in the chroot
+# so they appear in the build.log.
+chroot /var/tmp/mnt rpm -qa | sort
+
 # Unmount the chroot.  Unfortunately some processes are still running
 # in the chroot, so we can't do that.
 sync
