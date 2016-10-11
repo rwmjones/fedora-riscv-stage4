@@ -48,7 +48,7 @@ stage4-disk.img: stage4-builder.img
 stage4-builder.img: $(old_stage4) stage4-build-init.sh riscv-set-date.service root-shell.service local.repo
 	rm -f $@ $@-t
 	cp $< $@-t
-	guestfish -a $@-t -i \
+	guestfish -a $@-t -m /dev/sda \
 	    rm-f /init : \
 	    upload stage4-build-init.sh /init : \
 	    chmod 0755 /init : \
