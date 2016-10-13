@@ -39,7 +39,8 @@ stage4-disk.img: stage4-builder.img
 	rm -f $@ $@-t build.log
 	$(MAKE) boot-in-qemu DISK=stage4-builder.img |& tee build.log
 # Copy out the new stage4.
-	virt-cat -a stage4-builder.img /var/tmp/stage4-disk.img > $@-t
+	guestfish -a stage4-builder.img -m /dev/sda \
+	    download /var/tmp/stage4-disk.img $@-t
 # Sparsify it.
 	virt-sparsify --inplace $@-t
 	mv $@-t $@
