@@ -41,7 +41,7 @@ cleanup ()
     sleep 5
     sync
     mount -o remount,ro / >&/dev/null
-    poweroff
+    poweroff -f
 }
 trap cleanup INT QUIT TERM EXIT ERR
 
