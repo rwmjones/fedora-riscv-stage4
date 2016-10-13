@@ -65,72 +65,18 @@ mount -o bind /proc /var/tmp/mnt/proc
 mount -o bind /sys /var/tmp/mnt/sys
 rpm --root /var/tmp/mnt --initdb
 
-# For the list of core packages, see <id>core</id> in:
-# https://pagure.io/fedora-comps/blob/master/f/comps-f25.xml.in
-#
 # Adding glibc-langpack-en avoids the huge glibc-all-langpacks
 # being used.
 #
 # We need --releasever here because fedora-release isn't
 # installed inside the chroot.
-dnf --releasever 25 -y --installroot /var/tmp/mnt install \
-     basesystem \
-     bash \
-     coreutils \
-     cronie \
-     curl \
-     dnf \
-     dnf-plugins-core \
-     e2fsprogs \
-     expat \
-     fedora-release \
-     filesystem \
-     glibc \
-     glibc-langpack-en \
-     glib2 \
-     gpgme \
-     grep \
-     grubby \
-     hostname \
-     initscripts \
-     iputils \
-     kbd \
-     less \
-     libgpg-error \
-     ncurses \
-     openssh-clients \
-     openssh-server \
-     procps-ng \
-     rootfiles \
-     rpm \
-     setup \
-     shadow-utils \
-     systemd \
-     util-linux
-# Temporarily omitted:
-#    audit
-# nothing provides systemd-sysv needed by audit-2.6.7-1.fc25.0.riscv64.riscv64
-#    authconfig
-# nothing provides policycoreutils needed by authconfig-6.2.10-14.fc25.riscv64
-#    sudo
-# nothing provides /usr/bin/vi needed by sudo-1.8.18-1.fc25.0.riscv64.riscv64
-#    firewalld
-# nothing provides python3-dbus needed by python3-firewall-0.4.3.3-1.fc25.noarch
 #
-# Omitted because we don't have builds for them yet:
-#     dhcp-client
-#     dracut-config-generic
-#     dracut-config-rescue
-#     initial-setup
-#     iproute
-#     man-db
-#     NetworkManager
-#     parted
-#     passwd
-#     plymouth
-#     policycoreutils
-#     selinux-policy-targeted
-#     vim-minimal
+# strict=0 is like the old --skip-broken option in yum.  We can
+# remove it when all @core packages are available.
+dnf -y --releasever=25 --installroot=/var/tmp/mnt --setopt=strict=0 \
+     install \
+         @core \
+         glibc-langpack-en
 
 # Do some configuration within the chroot.
 
