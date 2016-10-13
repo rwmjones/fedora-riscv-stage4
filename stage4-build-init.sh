@@ -32,6 +32,9 @@ echo
 echo "This is the stage4 disk image automatic builder"
 echo
 
+# Clean the dnf cache.
+dnf clean all
+
 # Cleanup function called on failure or exit.
 cleanup ()
 {
