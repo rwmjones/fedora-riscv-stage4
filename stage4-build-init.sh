@@ -82,7 +82,7 @@ dnf -y --releasever=25 --installroot=/var/tmp/mnt --setopt=strict=0 \
 
 # Write an fstab for the chroot.
 cat > /var/tmp/mnt/etc/fstab <<EOF
-/dev/htifblk0 / ext4 defaults 0 0
+/dev/root / ext4 defaults 0 0
 EOF
 
 # Set the hostname.
