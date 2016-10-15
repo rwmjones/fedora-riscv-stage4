@@ -113,6 +113,12 @@ chroot /var/tmp/mnt \
 chroot /var/tmp/mnt \
        dnf config-manager --set-disabled updates updates-testing fedora
 
+# Clean DNF cache in the chroot.  This forces the first run of DNF
+# by the new machine to refresh the cache and not use the stale
+# data from the build environment.
+chroot /var/tmp/mnt \
+       dnf clean all
+
 # List all the packages which were installed in the chroot
 # so they appear in the build.log.
 chroot /var/tmp/mnt rpm -qa | sort
