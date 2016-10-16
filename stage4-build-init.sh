@@ -56,7 +56,7 @@ rm -f /var/tmp/stage4-disk.img-t
 rm -rf /var/tmp/mnt
 
 # Create a template disk image.
-truncate -s 20G /var/tmp/stage4-disk.img-t
+truncate -s 50G /var/tmp/stage4-disk.img-t
 mkfs -t ext4 /var/tmp/stage4-disk.img-t
 
 # Create the installroot.
