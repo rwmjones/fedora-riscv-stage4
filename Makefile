@@ -39,7 +39,7 @@ stage4-disk.img: stage4-builder.img
 	rm -f $@ $@-t build.log
 	$(MAKE) boot-in-qemu DISK=stage4-builder.img |& tee build.log
 # Copy out the new stage4.
-	guestfish -a stage4-builder.img -m /dev/sda \
+	guestfish -a stage4-builder.img -i \
 	    download /var/tmp/stage4-disk.img $@-t
 # Sparsify it.
 	virt-sparsify --inplace $@-t
@@ -49,7 +49,7 @@ stage4-disk.img: stage4-builder.img
 stage4-builder.img: $(old_stage4) stage4-build-init.sh riscv-set-date.service root-shell.service local.repo
 	rm -f $@ $@-t
 	cp $< $@-t
-	guestfish -a $@-t -m /dev/sda \
+	guestfish -a $@-t -i \
 	    rm-f /init : \
 	    upload stage4-build-init.sh /init : \
 	    chmod 0755 /init : \
@@ -72,7 +72,7 @@ boot-stage4-in-qemu: stage4-test.img
 stage4-test.img: stage4-disk.img
 	rm -f $@ $@-t
 	cp $< $@-t
-	guestfish -a $@-t -m /dev/sda \
+	guestfish -a $@-t -i \
 	    copy-in $(rpmsdir) /var/tmp
 	mv $@-t $@
 
