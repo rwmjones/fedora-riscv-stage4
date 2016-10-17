@@ -4,8 +4,6 @@ If you just want to download the latest stage4 disk image, go to:
 
   https://fedorapeople.org/groups/risc-v/disk-images/
 
-----------------------------------------------------------------------
-
 The stage4 disk image is a minimal, bootable disk image which runs on
 RV64G hardware or the Spike or QEMU emulators.  The image is built
 cleanly from RPMs.
@@ -13,39 +11,6 @@ cleanly from RPMs.
 Note that it doesn't contain a bootloader or kernel, those are
 provided separately.
 
-Every file in the disk image is "known" by RPM, except (currently)
-three files:
+For instructions on how to use and build disk images, see:
 
-  /init                        Runs an interactive shell
-  /usr/bin/poweroff
-  /etc/yum.repos.d/local.repo  Points to /var/tmp/RPMS repo (see below).
-
-We have a plan to get rid of these extra files.  The first two will go
-once we have built systemd.  The repo file will go once we have
-hardware or an emulator that supports networking.
-
-The image is minimal, so it doesn't have things like gcc, rpmbuild,
-etc.  However you can install them from RPMs using 'dnf'.  Because
-there is no networking, you need to download
-https://fedorapeople.org/groups/risc-v/RPMS/ (eg. using a recursive
-wget) and copy it into the disk image:
-
-  virt-copy-in -a stage4-disk.img /local/copy/of/RPMS /var/tmp
-
-Inside the disk image, install packages by doing:
-
-  dnf install rpm-build
-
-In the future the need to copy the RPMs directory in will be replaced
-by network access to the repository.
-
-To boot the VM, use one of the following commands:
-
-  qemu-system-riscv -m 4G -kernel /usr/bin/bbl \
-      -append vmlinux \
-      -drive file=stage4-disk.img,format=raw -nographic
-
-  spike +disk=stage4-disk.img /usr/bin/bbl vmlinux
-
-(This assumes privspec 1.7.  Things are going to be a bit different
-in privspec 1.9)
+  https://fedoraproject.org/wiki/Architectures/RISC-V/Disk_images
