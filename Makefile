@@ -7,7 +7,7 @@
 
 # If riscv-autobuild is running in another directory and creating
 # RPMs, then point to them here:
-rpmsdir    = /mnt/dev/fedora-riscv-autobuild/RPMS
+rpmsdir    = ../fedora-riscv-autobuild/RPMS
 # otherwise download https://fedorapeople.org/groups/risc-v/RPMS/
 # using recursive wget and point to your local copy of it here:
 #rpmsdir   = RPMS
