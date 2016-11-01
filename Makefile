@@ -64,9 +64,27 @@ boot-in-qemu: $(DISK) $(vmlinux)
 	    -append $(vmlinux) \
 	    -drive file=$(DISK),format=raw -nographic
 
-# Build a test image and allow booting it in qemu.  Useful for tests,
-# test-building, etc.  Does NOT alter the pristine stage4 disk.
+# Build a test image and allow booting it in qemu.  Does NOT alter the
+# pristine stage4 disk.
+#
+# To do a test build of an SRPM:
+#   make boot-stage4-in-qemu COPY="/path/to/foo.src.rpm"
+#   # ... inside the VM:
+#   cd /var/tmp
+#   dnf install @buildsys-build
+#   rpmbuild --rebuild foo.src.rpm
+#
+# To do a test build of a source tarball:
+#   make boot-stage4-in-qemu COPY="/path/to/foo.tar.gz"
+#   # ... inside the VM:
+#   cd /var/tmp
+#   dnf install @buildsys-build
+#   tar xf foo.tar.gz
+#   cd foo
+#   ./configure && make
+#
 boot-stage4-in-qemu: stage4-test.img
+	if [ -n "$(COPY)" ]; then virt-copy-in -a $< $(COPY) /var/tmp; fi
 	$(MAKE) boot-in-qemu DISK=$<
 
 stage4-test.img: stage4-disk.img
