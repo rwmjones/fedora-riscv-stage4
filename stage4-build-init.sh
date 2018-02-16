@@ -168,6 +168,7 @@ $tdnf -y install \
       procps-ng \
       rootfiles \
       rpm \
+      setup \
       shadow-utils \
       sudo \
       util-linux \
@@ -218,7 +219,6 @@ $tdnf -y install \
 #      plymouth
 #      policycoreutils
 #      selinux-policy-targeted
-#      setup
 #      systemd
 
 # Do some configuration within the chroot.
