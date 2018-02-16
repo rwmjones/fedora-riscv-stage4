@@ -52,7 +52,7 @@ stage4-builder.img: $(old_stage4) stage4-build-init.sh root-shell.service local.
 	mv $@-t $@
 
 # Boot $(DISK) in qemu.
-boot-in-qemu: $(DISK) $(vmlinux)
+boot-in-qemu: $(DISK) $(bbl)
 	qemu-system-riscv64 \
 	    -nographic -machine virt -smp 4 -m 4G \
 	    -kernel $(bbl) \
@@ -106,5 +106,5 @@ clean:
 distclean: clean
 	rm -f stage4-disk.img
 	rm -f stage4-disk.img.xz
-	rm -f $(vmlinux)
+	rm -f $(bbl)
 	rm -f $(old_stage4)
