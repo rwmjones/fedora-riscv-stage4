@@ -39,14 +39,14 @@ stage4-disk.img: stage4-builder.img
 	mv $@-t $@
 
 # This is the modified stage4 which builds a new stage4.
-stage4-builder.img: $(old_stage4) stage4-build-init.sh root-shell.service local.repo init.sh
+stage4-builder.img: $(old_stage4) stage4-build-init.sh root-shell.service local.repo init.sh poweroff
 	rm -f $@ $@-t
 	cp $< $@-t
 	guestfish -a $@-t -i \
 	    rm-f /init : \
 	    upload stage4-build-init.sh /init : \
 	    chmod 0755 /init : \
-	    copy-in $(rpmsdir) root-shell.service local.repo init.sh /var/tmp : \
+	    copy-in $(rpmsdir) root-shell.service local.repo init.sh poweroff /var/tmp : \
 	    upload local.repo /etc/yum.repos.d/local.repo : \
 	    chmod 0644 /etc/yum.repos.d/local.repo
 	mv $@-t $@

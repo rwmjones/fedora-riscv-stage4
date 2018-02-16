@@ -247,6 +247,11 @@ chmod 0555 /var/tmp/mnt/init
 #chroot /var/tmp/mnt \
 #       systemctl enable root-shell
 
+# Copy in the poweroff command.
+# [Remove this when we have systemd]
+cp /var/tmp/poweroff /var/tmp/mnt/usr/sbin/poweroff
+chmod 0555 /var/tmp/mnt/usr/sbin/poweroff
+
 # Disable public repos, they don't serve riscv64 packages anyway.
 # [Uncomment this when we have dnf]
 #chroot /var/tmp/mnt \
