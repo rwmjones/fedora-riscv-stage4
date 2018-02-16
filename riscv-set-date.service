@@ -1,9 +1,0 @@
-[Unit]
-Description=Set the date approximately, because QEMU does not provide a clock
-
-[Service]
-Type=oneshot
-ExecStart=/bin/sh -c 'date `date -r /init +%%m%%d%%H%%M%%Y`'
-
-[Install]
-WantedBy=basic.target

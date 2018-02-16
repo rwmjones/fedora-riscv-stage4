@@ -5,20 +5,13 @@
 #----------------------------------------------------------------------
 # Configuration.
 
-# If riscv-autobuild is running in another directory and creating
-# RPMs, then point to them here:
-rpmsdir    = ../fedora-riscv-autobuild/RPMS
-# otherwise download https://fedorapeople.org/groups/risc-v/RPMS/
-# using recursive wget and point to your local copy of it here:
-#rpmsdir   = RPMS
-
-# Kernel.
+# Bootloader (contains the Linux kernel as a payload).
 #
 # Either download this from:
 #   https://fedorapeople.org/groups/risc-v/disk-images/
 # or build it from:
 #   https://github.com/rwmjones/fedora-riscv-kernel
-vmlinux    = vmlinux
+bbl = bbl
 
 # Existing stage4 is needed to build a new one.  Get a working stage4
 # from https://fedorapeople.org/groups/risc-v/disk-images/ and rename
@@ -46,23 +39,28 @@ stage4-disk.img: stage4-builder.img
 	mv $@-t $@
 
 # This is the modified stage4 which builds a new stage4.
-stage4-builder.img: $(old_stage4) stage4-build-init.sh riscv-set-date.service root-shell.service local.repo
+stage4-builder.img: $(old_stage4) stage4-build-init.sh root-shell.service local.repo init.sh
 	rm -f $@ $@-t
 	cp $< $@-t
 	guestfish -a $@-t -i \
 	    rm-f /init : \
 	    upload stage4-build-init.sh /init : \
 	    chmod 0755 /init : \
-	    copy-in $(rpmsdir) riscv-set-date.service root-shell.service local.repo /var/tmp : \
+	    copy-in $(rpmsdir) root-shell.service local.repo init.sh /var/tmp : \
 	    upload local.repo /etc/yum.repos.d/local.repo : \
 	    chmod 0644 /etc/yum.repos.d/local.repo
 	mv $@-t $@
 
 # Boot $(DISK) in qemu.
 boot-in-qemu: $(DISK) $(vmlinux)
-	qemu-system-riscv -m 4G -kernel /usr/bin/bbl \
-	    -append $(vmlinux) \
-	    -drive file=$(DISK),format=raw -nographic
+	qemu-system-riscv64 \
+	    -nographic -machine virt -smp 4 -m 4G \
+	    -kernel $(bbl) \
+	    -append "console=ttyS0 ro root=/dev/vda init=/init" \
+	    -drive file=$(DISK),format=raw,if=none,id=hd0 \
+	    -device virtio-blk-device,drive=hd0 \
+	    -device virtio-net-device,netdev=usernet \
+	    -netdev user,id=usernet
 
 # Build a test image and allow booting it in qemu.  Does NOT alter the
 # pristine stage4 disk.

@@ -1,6 +1,5 @@
 [local]
 name=Local RPMS
-#baseurl=https://fedorapeople.org/groups/risc-v/RPMS/
-baseurl=file:///var/tmp/RPMS
+baseurl=https://fedorapeople.org/groups/risc-v/RPMS/
 enabled=1
 gpgcheck=0
