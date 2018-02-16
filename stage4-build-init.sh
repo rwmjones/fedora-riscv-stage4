@@ -174,6 +174,7 @@ $tdnf -y install \
       vim-minimal \
       \
       e2fsprogs \
+      tdnf \
       \
       fpc-srpm-macros \
       ghc-srpm-macros \
