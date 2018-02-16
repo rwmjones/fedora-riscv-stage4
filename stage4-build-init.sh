@@ -146,6 +146,7 @@ $tdnf clean all
 $tdnf makecache
 # This was the core list of f25, plus some extras.
 $tdnf -y install \
+      glibc-langpack-en \
       audit \
       basesystem \
       bash \
