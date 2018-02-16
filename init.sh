@@ -90,7 +90,7 @@ echo "Welcome to the Fedora/RISC-V stage4 disk image"
 echo "https://fedoraproject.org/wiki/Architectures/RISC-V"
 echo
 
-PS1='stage3:\w\$ '
+PS1='stage4:\w\$ '
 export PS1
 
 # Run bash.
