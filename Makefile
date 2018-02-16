@@ -88,8 +88,6 @@ boot-stage4-in-qemu: stage4-test.img
 stage4-test.img: stage4-disk.img
 	rm -f $@ $@-t
 	cp $< $@-t
-	guestfish -a $@-t -i \
-	    copy-in $(rpmsdir) /var/tmp
 	mv $@-t $@
 
 # Upload the new stage4 disk image.
