@@ -45,7 +45,7 @@ ldconfig /usr/lib64 /usr/lib /lib64 /lib
 
 # There is no hardware clock, just ensure the date is not miles out.
 date `date -r /init +%m%d%H%M%Y`
-openrdate 0.fedora.pool.ntp.org
+rdate 0.fedora.pool.ntp.org
 
 # Bring up the network.
 # (Note: These commands won't work unless the iproute package has been
