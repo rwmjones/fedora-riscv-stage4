@@ -161,6 +161,7 @@ $tdnf -y install \
       iproute \
       kbd \
       less \
+      man-db \
       ncurses \
       openrdate \
       parted \
@@ -213,7 +214,6 @@ $tdnf -y install \
 #      dnf
 #      dnf-plugins-core
 #      iputils
-#      man-db
 #      openssh-clients
 #      openssh-server
 #      plymouth
