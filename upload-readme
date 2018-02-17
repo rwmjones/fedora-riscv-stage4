@@ -1,5 +1,43 @@
-All documentation is now here:
+This is the current stage4 disk image for the Fedora/RISC-V project:
+https://fedoraproject.org/wiki/Architectures/RISC-V
 
-https://fedoraproject.org/wiki/Architectures/RISC-V/Disk_images
+Sources for these files can be found in:
+https://fedorapeople.org/groups/risc-v/SRPMS/
+https://github.com/rwmjones/fedora-riscv-stage4
 
-Please read the docs carefully before trying to use the disk images.
+To run stage4 (assuming you don't have real hardware) you need
+riscv-qemu from
+https://copr.fedorainfracloud.org/coprs/rjones/riscv/
+
+and then you should be able to run:
+
+  qemu-system-riscv64 \
+    -nographic \
+    -machine virt \
+    -m 2G \
+    -kernel bbl \
+    -append "console=ttyS0 ro root=/dev/vda init=/init" \
+    -device virtio-blk-device,drive=hd0 \
+    -drive file=stage4-disk.img,format=raw,id=hd0 \
+    -device virtio-net-device,netdev=usernet \
+    -netdev user,id=usernet
+
+Inside the guest:
+
+(1) Use ‘tdnf’ instead of ‘dnf’ to install packages, eg:
+
+  tdnf install glibc-devel
+
+(2) You may need to edit ‘/etc/yum.repos.d/local.repo’.
+
+(3) You may have to run rpmbuild like this:
+
+  rpmbuild --undefine _annotated_build --define "debug_package %{nil}" ...
+
+(4) You may need to install glibc-devel and other development
+packages before building software.
+
+(5) ^C doesn't work, and (for me) DNS doesn't work.  If you know
+how to fix these, please let us know!
+
+There is an IRC channel #fedora-riscv on FreeNode for other questions.
