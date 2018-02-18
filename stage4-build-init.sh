@@ -176,6 +176,7 @@ $tdnf -y install \
       vim-minimal \
       \
       e2fsprogs \
+      nano \
       tdnf \
       \
       fpc-srpm-macros \
@@ -201,6 +202,8 @@ $tdnf -y install \
       info \
       make \
       patch \
+      python2 \
+      python3 \
       redhat-rpm-config \
       rpm-build \
       sed \
