@@ -155,7 +155,6 @@ $tdnf -y install \
       curl \
       e2fsprogs \
       filesystem \
-      firewalld \
       glibc \
       hostname \
       iproute \
@@ -216,6 +215,7 @@ $tdnf -y install \
 #      dhcp-client
 #      dnf
 #      dnf-plugins-core
+#      firewalld
 #      iputils
 #      openssh-clients
 #      openssh-server
