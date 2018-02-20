@@ -24,20 +24,16 @@ and then you should be able to run:
 
 Inside the guest:
 
-(1) Use ‘tdnf’ instead of ‘dnf’ to install packages, eg:
+(1) You may need to edit ‘/etc/yum.repos.d/local.repo’.
 
-  tdnf install glibc-devel
-
-(2) You may need to edit ‘/etc/yum.repos.d/local.repo’.
-
-(3) You may have to run rpmbuild like this:
+(2) You may have to run rpmbuild like this:
 
   rpmbuild --undefine _annotated_build --define "debug_package %{nil}" ...
 
-(4) You may need to install glibc-devel and other development
+(3) You may need to install glibc-devel and other development
 packages before building software.
 
-(5) ^C doesn't work, and (for me) DNS doesn't work.  If you know
-how to fix these, please let us know!
+(4) DNS doesn't work.  If you know how to fix this, please let us
+know!
 
 There is an IRC channel #fedora-riscv on FreeNode for other questions.

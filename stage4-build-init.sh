@@ -128,101 +128,15 @@ rpm --root /var/tmp/mnt --initdb
 # Adding glibc-langpack-en avoids the huge glibc-all-langpacks
 # being used.
 #
-# We need --releasever here because fedora-release isn't
-# installed inside the chroot.
+# openrdate allows us to set the clock correctly on boot.
 #
 # strict=0 is like the old --skip-broken option in yum.  We can
 # remove it when all @core packages are available.
-# [Uncomment this when we have dnf]
-#dnf -y --releasever=25 --installroot=/var/tmp/mnt --setopt=strict=0 \
-#     install \
-#         @core \
-#         glibc-langpack-en
-rm -f /etc/yum.repos.d/*.repo
-cp /var/tmp/local.repo /etc/yum.repos.d
-tdnf="tdnf --releasever f27 --installroot /var/tmp/mnt"
-$tdnf repolist
-$tdnf clean all
-$tdnf makecache
-# This was the core list of f25, plus some extras.
-$tdnf -y install \
-      glibc-langpack-en \
-      audit \
-      basesystem \
-      bash \
-      coreutils \
-      cronie \
-      curl \
-      e2fsprogs \
-      filesystem \
-      glibc \
-      hostname \
-      iproute \
-      kbd \
-      less \
-      man-db \
-      ncurses \
-      openrdate \
-      parted \
-      passwd \
-      procps-ng \
-      rootfiles \
-      rpm \
-      setup \
-      shadow-utils \
-      sudo \
-      util-linux \
-      vim-minimal \
-      \
-      e2fsprogs \
-      nano \
-      tdnf \
-      \
-      fpc-srpm-macros \
-      ghc-srpm-macros \
-      gnat-srpm-macros \
-      go-srpm-macros \
-      nim-srpm-macros \
-      ocaml-srpm-macros \
-      openblas-srpm-macros \
-      perl-generators \
-      perl-srpm-macros \
-      python-srpm-macros \
-      \
-      hack-gcc \
-      cpio \
-      diffutils \
-      elfutils \
-      findutils \
-      gawk \
-      glibc-headers \
-      grep \
-      gzip \
-      info \
-      make \
-      patch \
-      python2 \
-      python3 \
-      redhat-rpm-config \
-      rpm-build \
-      sed \
-      tar \
-      unzip \
-      which \
-      xz
-#      NetworkManager
-#      authconfig
-#      dhcp-client
-#      dnf
-#      dnf-plugins-core
-#      firewalld
-#      iputils
-#      openssh-clients
-#      openssh-server
-#      plymouth
-#      policycoreutils
-#      selinux-policy-targeted
-#      systemd
+dnf -y --releasever=28 --installroot=/var/tmp/mnt --setopt=strict=0 \
+     install \
+         @core \
+         glibc-langpack-en \
+         openrdate
 
 # Do some configuration within the chroot.
 
@@ -257,20 +171,14 @@ cp /var/tmp/poweroff /var/tmp/mnt/usr/sbin/poweroff
 chmod 0555 /var/tmp/mnt/usr/sbin/poweroff
 
 # Disable public repos, they don't serve riscv64 packages anyway.
-# [Uncomment this when we have dnf]
-#chroot /var/tmp/mnt \
-#       dnf config-manager --set-disabled updates updates-testing fedora
-# [instead ...]
-for f in /var/tmp/mnt/etc/yum.repos.d/fedora*.repo; do
-    mv $f $f.disabled
-done
+chroot /var/tmp/mnt \
+       dnf config-manager --set-disabled rawhide updates updates-testing fedora
 
 # Clean DNF cache in the chroot.  This forces the first run of DNF
 # by the new machine to refresh the cache and not use the stale
 # data from the build environment.
-# [Uncomment this when we have dnf]
-#chroot /var/tmp/mnt \
-#       dnf clean all
+chroot /var/tmp/mnt \
+       dnf clean all
 
 # List all the packages which were installed in the chroot
 # so they appear in the build.log.
