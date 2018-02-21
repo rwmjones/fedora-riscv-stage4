@@ -276,6 +276,15 @@ done
 # so they appear in the build.log.
 chroot /var/tmp/mnt rpm -qa | sort
 
+# As a last resort, fail if certain commands or files are not
+# installed in the chroot which are required to build the next stage4
+# or for general basic operation.  This is just a backup in case
+# things have gone very wrong above.
+test -f /var/tmp/mnt/lib64/libc.so.6
+test -f /var/tmp/mnt/usr/bin/dnf
+test -f /var/tmp/mnt/usr/bin/mount
+test -f /var/tmp/mnt/usr/sbin/ip
+
 # Unmount the chroot.  Unfortunately some processes are still running
 # in the chroot, so we can't do that.
 sync
