@@ -45,7 +45,6 @@ ldconfig /usr/lib64 /usr/lib /lib64 /lib
 
 # There is no hardware clock, just ensure the date is not miles out.
 date `date -r /init +%m%d%H%M%Y`
-rdate 0.fedora.pool.ntp.org &
 
 # Bring up the network.
 # (Note: These commands won't work unless the iproute package has been
@@ -81,6 +80,8 @@ EOF
     chmod +x /etc/login
     xinetd -stayalive -filelog /var/log/xinetd.log
 fi
+
+rdate 0.fedora.pool.ntp.org &
 
 hostname stage4
 echo stage4.fedoraproject.org > /etc/hostname
