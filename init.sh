@@ -23,22 +23,32 @@ mount -t tmpfs -o mode=1777 shmfs /dev/shm
 
 rm -f /dev/loop*
 mknod /dev/loop-control c 10 237
+chown root.disk /dev/loop-control
+chmod 0660 /dev/loop-control
 mknod /dev/loop0 b 7 0
 mknod /dev/loop1 b 7 1
 mknod /dev/loop2 b 7 2
 rm -f /dev/null
 mknod /dev/null c 1 3
+chmod 0666 /dev/null
 rm -f /dev/ptmx
 mknod /dev/ptmx c 5 2
+chown root.tty /dev/ptmx
+chmod 0666 /dev/ptmx
 rm -f /dev/tty /dev/zero
 mknod /dev/tty c 5 0
+chown root.tty /dev/tty
+chmod 0666 /dev/tty
 mknod /dev/zero c 1 5
+chown root.root /dev/zero
+chmod 0666 /dev/zero
 rm -f /dev/vd{a,b}
 mknod /dev/vda b 254 0
 mknod /dev/vdb b 254 16
 rm -f /dev/random /dev/urandom
 mknod /dev/random c 1 8
 mknod /dev/urandom c 1 9
+chmod 0666 /dev/random /dev/urandom
 
 # Initialize dynamic linker cache.
 ldconfig /usr/lib64 /usr/lib /lib64 /lib
