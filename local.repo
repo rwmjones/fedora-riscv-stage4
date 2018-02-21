@@ -1,9 +1,7 @@
 [local]
 name=Local RPMS
-#baseurl=https://fedorapeople.org/groups/risc-v/RPMS/
+baseurl=https://fedorapeople.org/groups/risc-v/RPMS/
 # If DNS resolution doesn't work then ...
 #baseurl=https://152.19.134.199/groups/risc-v/RPMS/
-# Local mirror:
-baseurl=http://192.168.0.249/scratch/RPMS/
 enabled=1
 gpgcheck=0
