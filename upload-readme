@@ -9,31 +9,41 @@ To run stage4 (assuming you don't have real hardware) you need
 riscv-qemu from
 https://copr.fedorainfracloud.org/coprs/rjones/riscv/
 
+The root password is: riscv
+
 and then you should be able to run:
 
   qemu-system-riscv64 \
     -nographic \
     -machine virt \
+    -smp 4 \
     -m 2G \
     -kernel bbl \
+    -object rng-random,filename=/dev/urandom,id=rng0 \
+    -device virtio-rng-device,rng=rng0 \
     -append "console=ttyS0 ro root=/dev/vda init=/init" \
     -device virtio-blk-device,drive=hd0 \
     -drive file=stage4-disk.img,format=raw,id=hd0 \
     -device virtio-net-device,netdev=usernet \
-    -netdev user,id=usernet
+    -netdev user,id=usernet,hostfwd=tcp::10000-:22
+
+Note this tries to forward port 10000 on the host to port 22 on the
+guest, which should be running the OpenSSH server:
+
+  ssh -p 10000 root@localhost
+  root@localhost's password: riscv
 
 Inside the guest:
 
-(1) You may need to edit ‘/etc/yum.repos.d/local.repo’.
-
-(2) You may have to run rpmbuild like this:
+(1) You may have to run rpmbuild like this:
 
   rpmbuild --undefine _annotated_build --define "debug_package %{nil}" ...
 
-(3) You may need to install glibc-devel and other development
+(2) You may need to install glibc-devel and other development
 packages before building software.
 
-(4) DNS doesn't work.  If you know how to fix this, please let us
-know!
+(3) ‘nano’ is available as an editor.
+
+(4) Logging out from the console powers the machine off.  Beware!
 
 There is an IRC channel #fedora-riscv on FreeNode for other questions.

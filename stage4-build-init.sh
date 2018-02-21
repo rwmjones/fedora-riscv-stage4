@@ -60,28 +60,6 @@ fi
 
 echo 'nameserver 8.8.4.4' > /etc/resolv.conf
 
-# Allow telnet to work.
-if test -x /usr/sbin/xinetd && test -x /usr/sbin/in.telnetd ; then
-    cat > /etc/xinetd.d/telnet <<EOF
-service telnet
-{
-        flags           = REUSE
-        socket_type     = stream
-        wait            = no
-        user            = root
-        server          = /usr/sbin/in.telnetd
-       server_args     = -L /etc/login
-        log_on_failure  += USERID
-}
-EOF
-    cat > /etc/login <<EOF
-#!/bin/bash -
-exec bash -i -l
-EOF
-    chmod +x /etc/login
-    xinetd -stayalive -filelog /var/log/xinetd.log
-fi
-
 hostname stage4-builder
 echo stage4-builder.fedoraproject.org > /etc/hostname
 
@@ -136,7 +114,9 @@ dnf -y --releasever=28 --installroot=/var/tmp/mnt --setopt=strict=0 \
      install \
          @core \
          glibc-langpack-en \
-         openrdate
+         openrdate \
+         /usr/sbin/sshd \
+         /usr/bin/ssh-keygen
 
 # Do some configuration within the chroot.
 
@@ -165,6 +145,10 @@ chmod 0555 /var/tmp/mnt/init
 #chroot /var/tmp/mnt \
 #       systemctl enable root-shell
 
+# Disable GSSAPI in sshd.
+# [Temporarily required until we have krb5]
+sed -i -e 's,^\(GSSAPI.*\),#\1,' /var/tmp/mnt/etc/ssh/sshd_config
+
 # Copy in the poweroff command.
 # [Remove this when we have systemd]
 cp /var/tmp/poweroff /var/tmp/mnt/usr/sbin/poweroff
@@ -180,6 +164,11 @@ chroot /var/tmp/mnt \
 chroot /var/tmp/mnt \
        dnf clean all
 
+# Set a root password ('riscv').
+echo riscv |
+chroot /var/tmp/mnt \
+       passwd root --stdin --force
+
 # List all the packages which were installed in the chroot
 # so they appear in the build.log.
 chroot /var/tmp/mnt rpm -qa | sort
@@ -192,6 +181,7 @@ test -f /var/tmp/mnt/lib64/libc.so.6
 test -f /var/tmp/mnt/usr/bin/dnf
 test -f /var/tmp/mnt/usr/bin/mount
 test -f /var/tmp/mnt/usr/sbin/ip
+test -f /var/tmp/mnt/usr/sbin/sshd
 
 # Unmount the chroot.  Unfortunately some processes are still running
 # in the chroot, so we can't do that.

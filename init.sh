@@ -69,29 +69,14 @@ fi
 
 echo 'nameserver 8.8.4.4' > /etc/resolv.conf
 
-# Allow telnet to work.
-if test -x /usr/sbin/xinetd && test -x /usr/sbin/in.telnetd ; then
-    cat > /etc/xinetd.d/telnet <<EOF
-service telnet
-{
-        flags           = REUSE
-        socket_type     = stream
-        wait            = no
-        user            = root
-        server          = /usr/sbin/in.telnetd
-       server_args     = -L /etc/login
-        log_on_failure  += USERID
-}
-EOF
-    cat > /etc/login <<EOF
-#!/bin/bash -
-exec bash -i -l
-EOF
-    chmod +x /etc/login
-    xinetd -stayalive -filelog /var/log/xinetd.log
-fi
-
+# Try to set the time from a time server.
 rdate 0.fedora.pool.ntp.org &
+
+# Generate SSH host keys if not done already.
+/usr/bin/ssh-keygen -A
+
+# Start SSH server.
+/usr/sbin/sshd
 
 hostname stage4
 echo stage4.fedoraproject.org > /etc/hostname
