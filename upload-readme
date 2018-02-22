@@ -9,8 +9,6 @@ To run stage4 (assuming you don't have real hardware) you need
 riscv-qemu from
 https://copr.fedorainfracloud.org/coprs/rjones/riscv/
 
-The root password is: riscv
-
 and then you should be able to run:
 
   qemu-system-riscv64 \
@@ -33,17 +31,27 @@ guest, which should be running the OpenSSH server:
   ssh -p 10000 root@localhost
   root@localhost's password: riscv
 
+
 Inside the guest:
 
-(1) You may have to run rpmbuild like this:
+(1) The root password is: riscv
+
+(2) You may have to run rpmbuild like this:
 
   rpmbuild --undefine _annotated_build --define "debug_package %{nil}" ...
 
-(2) You may need to install glibc-devel and other development
-packages before building software.
+(3) You may need to install glibc-devel and other development
+packages before building software:
 
-(3) ‘nano’ is available as an editor.
+  dnf install glibc-devel @buildsys-build
 
-(4) Logging out from the console powers the machine off.  Beware!
+(4) ‘nano’ is available as an editor.
+
+(5) The C++ compiler is broken.  There are two files called
+‘c++config.h’, and one of them has an incorrect definition.  COMMENT
+OUT the following line.  This will be fixed when we rebuild GCC.
+
+  #define _GLIBCXX_USE_FLOAT128 1
+
 
 There is an IRC channel #fedora-riscv on FreeNode for other questions.
