@@ -1,64 +1,6 @@
 #!/bin/bash -
-# Init used to build the stage4.
 
-# Set up the PATH.
-PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
-export PATH
-
-# Root filesystem is mounted as ro, remount it as rw.
-mount -o remount,rw /
-
-# Mount standard filesystems.
-mount -t proc /proc /proc
-mount -t sysfs /sys /sys
-mount -t tmpfs -o "nosuid,size=20%,mode=0755" tmpfs /run
-mkdir -p /run/lock
-mkdir -p /dev/pts
-mount -t devpts /dev/pts /dev/pts
-mkdir -p /dev/shm
-mount -t tmpfs -o mode=1777 shmfs /dev/shm
-
-# XXX devtmpfs
-#mount -t devtmpfs /dev /dev
-
-rm -f /dev/loop*
-mknod /dev/loop-control c 10 237
-mknod /dev/loop0 b 7 0
-mknod /dev/loop1 b 7 1
-mknod /dev/loop2 b 7 2
-rm -f /dev/null
-mknod /dev/null c 1 3
-rm -f /dev/ptmx
-mknod /dev/ptmx c 5 2
-rm -f /dev/tty /dev/zero
-mknod /dev/tty c 5 0
-mknod /dev/zero c 1 5
-rm -f /dev/vd{a,b}
-mknod /dev/vda b 254 0
-mknod /dev/vdb b 254 16
-rm -f /dev/random /dev/urandom
-mknod /dev/random c 1 8
-mknod /dev/urandom c 1 9
-
-# Initialize dynamic linker cache.
-ldconfig /usr/lib64 /usr/lib /lib64 /lib
-
-# There is no hardware clock, just ensure the date is not miles out.
-date `date -r /init +%m%d%H%M%Y`
-rdate 0.fedora.pool.ntp.org &
-
-# Bring up the network.
-# (Note: These commands won't work unless the iproute package has been
-# installed in a previous boot)
-if ip -V >&/dev/null; then
-    ip a add 10.0.2.15/255.255.255.0 dev eth0
-    ip link set eth0 up
-    ip r add default via 10.0.2.2 dev eth0
-    ip a list
-    ip r list
-fi
-
-echo 'nameserver 8.8.4.4' > /etc/resolv.conf
+# Firstboot script to build the stage4.
 
 hostname stage4-builder
 echo stage4-builder.fedoraproject.org > /etc/hostname
@@ -66,6 +8,8 @@ echo stage4-builder.fedoraproject.org > /etc/hostname
 echo
 echo "This is the stage4 disk image automatic builder"
 echo
+
+exec >& /build.log
 
 # Clean the dnf cache.
 dnf clean all
@@ -78,7 +22,6 @@ cleanup ()
     sync
     sleep 5
     sync
-    mount.static -o remount,ro / >&/dev/null
     poweroff
 }
 trap cleanup INT QUIT TERM EXIT ERR
@@ -119,7 +62,8 @@ dnf -y --releasever=28 --installroot=/var/tmp/mnt --setopt=strict=0 \
          openrdate \
          /usr/sbin/sshd \
          /usr/bin/ssh-keygen \
-         systemd-udev
+         systemd-udev \
+         lsof
 
 # Do some configuration within the chroot.
 
@@ -187,9 +131,11 @@ test -f /var/tmp/mnt/usr/sbin/init
 test -f /var/tmp/mnt/usr/sbin/ip
 test -f /var/tmp/mnt/usr/sbin/sshd
 
-# Unmount the chroot.  Unfortunately some processes are still running
-# in the chroot, so we can't do that.
+# Unmount the chroot.
 sync
+sleep 5
+kill -HUP `lsof -t /var/tmp/mnt` ||:
+umount -lR /var/tmp/mnt
 
 # Disk image is built, so move it to the final filename.
 # guestfish downloads this, but if it doesn't exist, guestfish
