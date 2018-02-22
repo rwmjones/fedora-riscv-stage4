@@ -108,6 +108,8 @@ rpm --root /var/tmp/mnt --initdb
 #
 # openrdate allows us to set the clock correctly on boot.
 #
+# systemd-udev is apparently needed for systemd-remount-fs
+#
 # strict=0 is like the old --skip-broken option in yum.  We can
 # remove it when all @core packages are available.
 dnf -y --releasever=28 --installroot=/var/tmp/mnt --setopt=strict=0 \
@@ -116,7 +118,8 @@ dnf -y --releasever=28 --installroot=/var/tmp/mnt --setopt=strict=0 \
          glibc-langpack-en \
          openrdate \
          /usr/sbin/sshd \
-         /usr/bin/ssh-keygen
+         /usr/bin/ssh-keygen \
+         systemd-udev
 
 # Do some configuration within the chroot.
 
@@ -128,31 +131,31 @@ EOF
 # Set the hostname.
 echo stage4.fedoraproject.org > /var/tmp/mnt/etc/hostname
 
+# Set the welcome message.
+i=/var/tmp/mnt/etc/issue
+echo > $i
+echo "Welcome to the Fedora/RISC-V stage4 disk image"      >> $i
+echo "https://fedoraproject.org/wiki/Architectures/RISC-V" >> $i
+echo >> $i
+echo "Kernel \r on an \m (\l)" >> $i
+echo >> $i
+cp /var/tmp/mnt/etc/issue /var/tmp/mnt/etc/issue.net
+
 # Copy local.repo in.
 cp /var/tmp/local.repo /var/tmp/mnt/etc/yum.repos.d
 
-# Set up /init (in the chroot) as a symlink.
-# [Uncomment this when we have systemd]
-#pushd /var/tmp/mnt
-#ln -s usr/lib/systemd/systemd init
-#popd
-# [Temporarily ...]
-cp /var/tmp/init.sh /var/tmp/mnt/init
-chmod 0555 /var/tmp/mnt/init
+# Enable systemd-networkd.
+cp /var/tmp/50-wired.network /var/tmp/mnt/etc/systemd/network/
+chroot /var/tmp/mnt \
+       ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
-# Add the root-shell systemd service.
-#cp /var/tmp/root-shell.service /var/tmp/mnt/etc/systemd/system/
-#chroot /var/tmp/mnt \
-#       systemctl enable root-shell
+# Enable some standard systemd services.
+chroot /var/tmp/mnt \
+       systemctl enable sshd systemd-networkd systemd-resolved
 
 # Disable GSSAPI in sshd.
 # [Temporarily required until we have krb5]
 sed -i -e 's,^\(GSSAPI.*\),#\1,' /var/tmp/mnt/etc/ssh/sshd_config
-
-# Copy in the poweroff command.
-# [Remove this when we have systemd]
-cp /var/tmp/poweroff /var/tmp/mnt/usr/sbin/poweroff
-chmod 0555 /var/tmp/mnt/usr/sbin/poweroff
 
 # Disable public repos, they don't serve riscv64 packages anyway.
 chroot /var/tmp/mnt \
@@ -180,6 +183,7 @@ chroot /var/tmp/mnt rpm -qa | sort
 test -f /var/tmp/mnt/lib64/libc.so.6
 test -f /var/tmp/mnt/usr/bin/dnf
 test -f /var/tmp/mnt/usr/bin/mount
+test -f /var/tmp/mnt/usr/sbin/init
 test -f /var/tmp/mnt/usr/sbin/ip
 test -f /var/tmp/mnt/usr/sbin/sshd
 

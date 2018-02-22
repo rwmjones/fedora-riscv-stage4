@@ -1,0 +1,7 @@
+# Configuration for the simple guest network.
+
+[Match]
+Name=eth0
+
+[Network]
+DHCP=ipv4

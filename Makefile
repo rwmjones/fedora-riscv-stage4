@@ -30,7 +30,7 @@ stage4-disk.img.xz: stage4-disk.img
 
 stage4-disk.img: stage4-builder.img
 	rm -f $@ $@-t build.log
-	$(MAKE) boot-in-qemu DISK=stage4-builder.img |& tee build.log
+	$(MAKE) boot-in-qemu DISK=stage4-builder.img INIT=init=/init |& tee build.log
 # Copy out the new stage4.
 	guestfish -a stage4-builder.img -i \
 	    download /var/tmp/stage4-disk.img $@-t
@@ -39,14 +39,14 @@ stage4-disk.img: stage4-builder.img
 	mv $@-t $@
 
 # This is the modified stage4 which builds a new stage4.
-stage4-builder.img: $(old_stage4) stage4-build-init.sh root-shell.service local.repo init.sh poweroff
+stage4-builder.img: $(old_stage4) stage4-build-init.sh 50-wired.network local.repo
 	rm -f $@ $@-t
 	cp $< $@-t
 	guestfish -a $@-t -i \
 	    rm-f /init : \
 	    upload stage4-build-init.sh /init : \
 	    chmod 0755 /init : \
-	    copy-in $(rpmsdir) root-shell.service local.repo init.sh poweroff /var/tmp : \
+	    copy-in 50-wired.network local.repo /var/tmp : \
 	    upload local.repo /etc/yum.repos.d/local.repo : \
 	    chmod 0644 /etc/yum.repos.d/local.repo
 	mv $@-t $@
@@ -58,7 +58,7 @@ boot-in-qemu: $(DISK) $(bbl)
 	    -kernel $(bbl) \
 	    -object rng-random,filename=/dev/urandom,id=rng0 \
 	    -device virtio-rng-device,rng=rng0 \
-	    -append "console=ttyS0 ro root=/dev/vda init=/init" \
+	    -append "console=ttyS0 ro root=/dev/vda $(INIT)" \
 	    -drive file=$(DISK),format=raw,if=none,id=hd0 \
 	    -device virtio-blk-device,drive=hd0 \
 	    -device virtio-net-device,netdev=usernet \
