@@ -58,7 +58,7 @@ boot-in-qemu: $(DISK) $(bbl)
 	    -kernel $(bbl) \
 	    -object rng-random,filename=/dev/urandom,id=rng0 \
 	    -device virtio-rng-device,rng=rng0 \
-	    -append "console=ttyS0 ro root=/dev/vda $(INIT)" \
+	    -append "ro root=/dev/vda $(INIT)" \
 	    -drive file=$(DISK),format=raw,if=none,id=hd0 \
 	    -device virtio-blk-device,drive=hd0 \
 	    -device virtio-net-device,netdev=usernet \
