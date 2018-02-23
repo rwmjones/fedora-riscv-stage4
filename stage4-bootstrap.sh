@@ -100,7 +100,7 @@ chroot /var/tmp/mnt \
 
 # systemd starts serial consoles on /dev/ttyS0 and /dev/hvc0.  The
 # only problem is they are the same serial console.  Mask one.
-chroot /var/tmp/mnt
+chroot /var/tmp/mnt \
         systemctl mask serial-getty@hvc0.service
 
 # Disable GSSAPI in sshd.
