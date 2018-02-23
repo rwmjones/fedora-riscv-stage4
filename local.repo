@@ -2,6 +2,6 @@
 name=Local RPMS
 baseurl=https://fedorapeople.org/groups/risc-v/RPMS/
 # If you don't have DNS working try this:
-#baseurl=https://152.19.134.199/groups/risc-v/RPMS/
+#baseurl=http://152.19.134.199/groups/risc-v/RPMS/
 enabled=1
 gpgcheck=0
