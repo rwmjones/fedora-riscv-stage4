@@ -91,12 +91,14 @@ cp /var/tmp/local.repo /var/tmp/mnt/etc/yum.repos.d
 
 # Enable systemd-networkd.
 cp /var/tmp/50-wired.network /var/tmp/mnt/etc/systemd/network/
-chroot /var/tmp/mnt \
-       ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
+# Use Google's nameservers for DNS resolution.
+rm -f /var/tmp/mnt/etc/resolv.conf
+echo 'nameserver 8.8.4.4' > /var/tmp/mnt/etc/resolv.conf
 
 # Enable some standard systemd services.
 chroot /var/tmp/mnt \
-       systemctl enable sshd systemd-networkd systemd-resolved
+       systemctl enable sshd systemd-networkd
 
 # systemd starts serial consoles on /dev/ttyS0 and /dev/hvc0.  The
 # only problem is they are the same serial console.  Mask one.
