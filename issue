@@ -1,0 +1,15 @@
+
+Welcome to the Fedora/RISC-V stage4 disk image
+https://fedoraproject.org/wiki/Architectures/RISC-V
+
+Kernel \r on an \m (\l)
+
+The root password is ‘riscv’.
+
+To install new packages use ‘dnf install ...’
+
+If DNS isn’t working, try editing ‘/etc/yum.repos.d/local.repo’.
+
+For updates and latest information read:
+https://fedorapeople.org/groups/risc-v/disk-images/readme.txt
+

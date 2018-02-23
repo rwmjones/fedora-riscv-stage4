@@ -1,0 +1,10 @@
+[Unit]
+Description=Set the date and time
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/rdate -s rdate.directadmin.com
+
+[Install]
+WantedBy=multi-user.target

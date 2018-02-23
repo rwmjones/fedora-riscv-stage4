@@ -76,15 +76,9 @@ EOF
 # Set the hostname.
 echo stage4.fedoraproject.org > /var/tmp/mnt/etc/hostname
 
-# Set the welcome message.
-i=/var/tmp/mnt/etc/issue
-echo > $i
-echo "Welcome to the Fedora/RISC-V stage4 disk image"      >> $i
-echo "https://fedoraproject.org/wiki/Architectures/RISC-V" >> $i
-echo >> $i
-echo "Kernel \r on an \m (\l)" >> $i
-echo >> $i
-cp /var/tmp/mnt/etc/issue /var/tmp/mnt/etc/issue.net
+# Copy in the welcome message.
+cp /var/tmp/issue /var/tmp/mnt/etc/issue
+cp /var/tmp/issue /var/tmp/mnt/etc/issue.net
 
 # Copy local.repo in.
 cp /var/tmp/local.repo /var/tmp/mnt/etc/yum.repos.d
@@ -96,9 +90,12 @@ cp /var/tmp/50-wired.network /var/tmp/mnt/etc/systemd/network/
 rm -f /var/tmp/mnt/etc/resolv.conf
 echo 'nameserver 8.8.4.4' > /var/tmp/mnt/etc/resolv.conf
 
-# Enable some standard systemd services.
+# Copy in the rdate.service file.
+cp /var/tmp/rdate.service /var/tmp/mnt/etc/systemd/system/
+
+# Enable some systemd services.
 chroot /var/tmp/mnt \
-       systemctl enable sshd systemd-networkd
+       systemctl enable rdate sshd systemd-networkd
 
 # systemd starts serial consoles on /dev/ttyS0 and /dev/hvc0.  The
 # only problem is they are the same serial console.  Mask one.
