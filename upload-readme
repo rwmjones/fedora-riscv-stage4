@@ -47,11 +47,5 @@ packages before building software:
 
 (4) ‘nano’ is available as an editor.
 
-(5) The C++ compiler is broken.  There are two files called
-‘c++config.h’, and one of them has an incorrect definition.  COMMENT
-OUT the following line.  This will be fixed when we rebuild GCC.
-
-  #define _GLIBCXX_USE_FLOAT128 1
-
 
 There is an IRC channel #fedora-riscv on FreeNode for other questions.
