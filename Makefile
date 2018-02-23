@@ -25,7 +25,7 @@ all: stage4-disk.img.xz
 
 stage4-disk.img.xz: stage4-disk.img
 	rm -f $@
-	xz --best -k $^
+	xz --best -k -v $^
 	ls -lh $@
 
 stage4-disk.img: stage4-builder.img
