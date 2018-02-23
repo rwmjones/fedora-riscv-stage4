@@ -131,6 +131,7 @@ chroot /var/tmp/mnt rpm -qa | sort
 # or for general basic operation.  This is just a backup in case
 # things have gone very wrong above.
 test -f /var/tmp/mnt/lib64/libc.so.6
+test -f /var/tmp/mnt/usr/bin/dbus-daemon
 test -f /var/tmp/mnt/usr/bin/dnf
 test -f /var/tmp/mnt/usr/bin/mount
 test -f /var/tmp/mnt/usr/sbin/init
