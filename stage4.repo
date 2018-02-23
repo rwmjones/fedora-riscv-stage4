@@ -1,0 +1,6 @@
+[local]
+name=Local RPMS
+# Local copy of the full repository, created and used by the autobuilder.
+baseurl=http://192.168.0.249/scratch/RPMS/
+enabled=1
+gpgcheck=0

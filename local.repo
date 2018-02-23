@@ -1,6 +1,7 @@
 [local]
 name=Local RPMS
-# Local copy of the full repository, created and used by the autobuilder.
-baseurl=http://192.168.0.249/scratch/RPMS/
+baseurl=https://fedorapeople.org/groups/risc-v/RPMS/
+# If you don't have DNS working try this:
+#baseurl=https://152.19.134.199/groups/risc-v/RPMS/
 enabled=1
 gpgcheck=0

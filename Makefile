@@ -40,14 +40,14 @@ stage4-disk.img: stage4-builder.img
 	mv $@-t $@
 
 # This is the modified stage4 which builds a new stage4.
-stage4-builder.img: $(old_stage4) stage4-bootstrap.sh 50-wired.network local.repo
+stage4-builder.img: $(old_stage4) stage4-bootstrap.sh 50-wired.network stage4.repo local.repo
 	rm -f $@ $@-t
 	cp $< $@-t
 	virt-customize -a $@-t \
 	    --firstboot stage4-bootstrap.sh \
 	    --copy-in 50-wired.network:/var/tmp \
 	    --copy-in local.repo:/var/tmp \
-	    --copy-in local.repo:/etc/yum.repos.d/
+	    --upload stage4.repo:/etc/yum.repos.d/local.repo
 	mv $@-t $@
 
 # Boot $(DISK) in qemu.
