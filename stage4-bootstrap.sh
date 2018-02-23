@@ -98,6 +98,11 @@ chroot /var/tmp/mnt \
 chroot /var/tmp/mnt \
        systemctl enable sshd systemd-networkd systemd-resolved
 
+# systemd starts serial consoles on /dev/ttyS0 and /dev/hvc0.  The
+# only problem is they are the same serial console.  Mask one.
+chroot /var/tmp/mnt
+        systemctl mask serial-getty@hvc0.service
+
 # Disable GSSAPI in sshd.
 # [Temporarily required until we have krb5]
 sed -i -e 's,^\(GSSAPI.*\),#\1,' /var/tmp/mnt/etc/ssh/sshd_config
