@@ -59,12 +59,13 @@ rpm --root /var/tmp/mnt --initdb
 dnf -y --releasever=28 --installroot=/var/tmp/mnt --setopt=strict=0 \
      install \
          @core \
-         glibc-langpack-en \
-         openrdate \
-         /usr/sbin/sshd \
          /usr/bin/ssh-keygen \
-         systemd-udev \
-         lsof
+         /usr/sbin/sshd \
+         glibc-langpack-en \
+         lsof \
+         nano \
+         openrdate \
+         systemd-udev
 
 # Do some configuration within the chroot.
 
