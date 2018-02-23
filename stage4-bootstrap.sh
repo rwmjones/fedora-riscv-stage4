@@ -22,7 +22,8 @@ cleanup ()
     sync
     sleep 5
     sync
-    poweroff
+    # systemd poweroff is buggy, force immediate poweroff instead:
+    poweroff -f
 }
 trap cleanup INT QUIT TERM EXIT ERR
 
