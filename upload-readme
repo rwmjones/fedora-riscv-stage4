@@ -6,8 +6,9 @@ https://fedorapeople.org/groups/risc-v/SRPMS/
 https://github.com/rwmjones/fedora-riscv-stage4
 
 To run stage4 (assuming you don't have real hardware) you need
-riscv-qemu from
+riscv-qemu from either of these places:
 https://copr.fedorainfracloud.org/coprs/rjones/riscv/
+https://github.com/riscv/riscv-qemu/tree/qemu-upstream-v6
 
 and then you should be able to run:
 
