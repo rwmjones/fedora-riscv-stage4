@@ -47,8 +47,9 @@ mount -o rbind /proc /var/tmp/mnt/proc
 mount -o rbind /sys /var/tmp/mnt/sys
 rpm --root /var/tmp/mnt --initdb
 
-# Adding glibc-langpack-en avoids the huge glibc-all-langpacks
-# being used.
+# glibc-langpack-en avoids the huge glibc-all-langpacks being used.
+#
+# glibc-devel can be removed when we have proper gcc.
 #
 # openrdate allows us to set the clock correctly on boot.
 #
@@ -59,13 +60,16 @@ rpm --root /var/tmp/mnt --initdb
 dnf -y --releasever=28 --installroot=/var/tmp/mnt --setopt=strict=0 \
      install \
          @core \
+         @buildsys-build \
          /usr/bin/ssh-keygen \
          /usr/sbin/sshd \
          glibc-langpack-en \
+         glibc-devel \
          lsof \
          nano \
          openrdate \
-         systemd-udev
+         systemd-udev \
+         vim-minimal
 
 # Do some configuration within the chroot.
 

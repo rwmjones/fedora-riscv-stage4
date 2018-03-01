@@ -41,12 +41,8 @@ Inside the guest:
 
   rpmbuild --undefine _annotated_build --define "debug_package %{nil}" ...
 
-(3) You may need to install glibc-devel and other development
-packages before building software:
-
-  dnf install glibc-devel @buildsys-build
-
-(4) ‘nano’ is available as an editor.
+(3) ‘nano’ and ‘vi’ are available as editors in the base image.
+‘emacs-nox’ can be installed using dnf.
 
 
 There is an IRC channel #fedora-riscv on FreeNode for other questions.
