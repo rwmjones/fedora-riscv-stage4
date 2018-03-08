@@ -49,8 +49,6 @@ rpm --root /var/tmp/mnt --initdb
 
 # glibc-langpack-en avoids the huge glibc-all-langpacks being used.
 #
-# glibc-devel can be removed when we have proper gcc.
-#
 # openrdate allows us to set the clock correctly on boot.
 #
 # systemd-udev is apparently needed for systemd-remount-fs
@@ -64,7 +62,6 @@ dnf -y --releasever=28 --installroot=/var/tmp/mnt --setopt=strict=0 \
          /usr/bin/ssh-keygen \
          /usr/sbin/sshd \
          glibc-langpack-en \
-         glibc-devel \
          lsof \
          nano \
          openrdate \
