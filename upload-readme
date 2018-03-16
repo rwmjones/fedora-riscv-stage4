@@ -5,10 +5,14 @@ Sources for these files can be found in:
 https://fedorapeople.org/groups/risc-v/SRPMS/
 https://github.com/rwmjones/fedora-riscv-stage4
 
-To run stage4 (assuming you don't have real hardware) you need
-riscv-qemu from either of these places:
+To run stage4 (assuming you don't have real hardware) you need the
+latest upstream qemu from git:
+https://git.qemu.org/qemu.git/
+The FPU is broken in this version of QEMU, you must add this patch:
+https://github.com/rwmjones/fedora-riscv-bootstrap/blob/master/stage1-riscv-qemu/force-float-save.patch
+
+Or use the prebuilt qemu packages here:
 https://copr.fedorainfracloud.org/coprs/rjones/riscv/
-https://github.com/riscv/riscv-qemu/tree/qemu-upstream-v6
 
 and then you should be able to run:
 
