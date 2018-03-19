@@ -104,10 +104,6 @@ chroot /var/tmp/mnt \
 chroot /var/tmp/mnt \
         systemctl mask serial-getty@hvc0.service
 
-# Disable GSSAPI in sshd.
-# [Temporarily required until we have krb5]
-sed -i -e 's,^\(GSSAPI.*\),#\1,' /var/tmp/mnt/etc/ssh/sshd_config
-
 # Disable public repos, they don't serve riscv64 packages anyway.
 chroot /var/tmp/mnt \
        dnf config-manager --set-disabled rawhide updates updates-testing fedora
