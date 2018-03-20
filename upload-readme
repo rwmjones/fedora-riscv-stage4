@@ -48,5 +48,9 @@ Inside the guest:
 (3) ‘nano’ and ‘vi’ are available as editors in the base image.
 ‘emacs-nox’ can be installed using dnf.
 
+(4) We use ‘dnf versionlock’ to lock the version of GCC to a specific
+version (to avoid GCC 8 being pulled in right now).  To override the
+lock you will need to use ‘dnf versionlock clear’.
+
 
 There is an IRC channel #fedora-riscv on FreeNode for other questions.
