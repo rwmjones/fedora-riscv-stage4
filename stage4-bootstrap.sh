@@ -65,6 +65,7 @@ dnf -y --releasever=28 --installroot=/var/tmp/mnt --setopt=strict=0 \
          lsof \
          nano \
          openrdate \
+         python3-dnf-plugin-versionlock \
          systemd-udev \
          vim-minimal
 
@@ -107,6 +108,33 @@ chroot /var/tmp/mnt \
 # Disable public repos, they don't serve riscv64 packages anyway.
 chroot /var/tmp/mnt \
        dnf config-manager --set-disabled rawhide updates updates-testing fedora
+
+# Lock GCC 7.3.1 in place so that later versions won't be installed
+# automatically.  Yes unfortunately we have to list every package
+# here.  We can remove this when we move to building only Fedora 28 +
+# Rawhide.
+chroot /var/tmp/mnt \
+       dnf versionlock add \
+           cpp-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           gcc-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           gcc-c++-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           gcc-gdb-plugin-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           gcc-gfortran-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           gcc-objc-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           gcc-objc++-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           gcc-plugin-devel-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libatomic-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libatomic-static-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libgcc-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libgccjit-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libgccjit-devel-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libgfortran-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libgfortran-static-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libgomp-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libobjc-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libstdc++-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libstdc++-devel-7.3.1-5.2.riscv64.fc28.riscv64.rpm \
+           libstdc++-static-7.3.1-5.2.riscv64.fc28.riscv64.rpm
 
 # Clean DNF cache in the chroot.  This forces the first run of DNF
 # by the new machine to refresh the cache and not use the stale
