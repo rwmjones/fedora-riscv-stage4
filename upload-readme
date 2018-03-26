@@ -4,17 +4,25 @@ https://fedoraproject.org/wiki/Architectures/RISC-V
 Sources for these files can be found in:
 https://fedorapeople.org/groups/risc-v/SRPMS/
 https://github.com/rwmjones/fedora-riscv-stage4
+https://github.com/rwmjones/fedora-riscv-kernel
 
-To run stage4 (assuming you don't have real hardware) you need the
-latest upstream qemu from git:
-https://git.qemu.org/qemu.git/
-The FPU is broken in this version of QEMU, you must add this patch:
-https://github.com/rwmjones/fedora-riscv-bootstrap/blob/master/stage1-riscv-qemu/force-float-save.patch
+QEMU
+----
 
-Or use the prebuilt qemu packages here:
-https://copr.fedorainfracloud.org/coprs/rjones/riscv/
+Assuming you don't have real hardware, we recommend using QEMU.
+One of the following versions should work:
 
-and then you should be able to run:
+* Upstream qemu from git + this patch to work around a problem with the FPU:
+  http://lists.nongnu.org/archive/html/qemu-devel/2018-03/msg06483.html
+
+* qemu >= 2.12.0 from Fedora Rawhide (earlier versions will not work).
+  This includes the FPU workaround.
+
+* The prebuilt qemu packages here:
+  https://copr.fedorainfracloud.org/coprs/rjones/riscv/
+  This includes the FPU workaround.
+
+This is the suggested command line:
 
   qemu-system-riscv64 \
     -nographic \
@@ -30,14 +38,17 @@ and then you should be able to run:
     -device virtio-net-device,netdev=usernet \
     -netdev user,id=usernet,hostfwd=tcp::10000-:22
 
-Note this tries to forward port 10000 on the host to port 22 on the
-guest, which should be running the OpenSSH server:
+SSH access
+----------
+
+The QEMU command tries to forward port 10000 on the host to port 22 on
+the guest, which should be running the OpenSSH server:
 
   ssh -p 10000 root@localhost
   root@localhost's password: riscv
 
-
-Inside the guest:
+Inside the guest
+----------------
 
 (1) The root password is: riscv
 
@@ -52,5 +63,7 @@ Inside the guest:
 version (to avoid GCC 8 being pulled in right now).  To override the
 lock you will need to use ‘dnf versionlock clear’.
 
+Contacting us
+-------------
 
-There is an IRC channel #fedora-riscv on FreeNode for other questions.
+IRC channel #fedora-riscv on FreeNode
