@@ -80,6 +80,14 @@ Inside the guest
 version (to avoid GCC 8 being pulled in right now).  To override the
 lock you will need to use ‘dnf versionlock clear’.
 
+Creating a root filesystem / tar file
+-------------------------------------
+
+  virt-tar-out -a stage4-disk.img / - > rootfs.tar
+
+Note that when unpacking this you must run tar as root and use
+‘tar --acls --selinux --xattrs’ to preserve all attributes.
+
 Contacting us
 -------------
 
