@@ -45,7 +45,7 @@ stage4-builder.img: $(old_stage4) stage4-bootstrap.sh 50-wired.network stage4.re
 	rm -f $@ $@-t
 	cp $< $@-t
 	truncate -s 20G $@-t
-	e2fsck -f $@-t
+	e2fsck -fp $@-t
 	resize2fs $@-t
 	sed 's/@DATE@/$(BUILD_DATE)/' < issue.in > issue
 	virt-customize -a $@-t \
@@ -97,7 +97,7 @@ stage4-test.img: stage4-disk.img
 	rm -f $@ $@-t
 	cp $< $@-t
 	truncate -s 20G $@-t
-	e2fsck -f $@-t
+	e2fsck -fp $@-t
 	resize2fs $@-t
 	mv $@-t $@
 
