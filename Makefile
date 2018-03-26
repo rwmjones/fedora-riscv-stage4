@@ -43,6 +43,9 @@ stage4-disk.img: stage4-builder.img
 stage4-builder.img: $(old_stage4) stage4-bootstrap.sh 50-wired.network stage4.repo local.repo issue rdate.service
 	rm -f $@ $@-t
 	cp $< $@-t
+	truncate -s 20G $@-t
+	e2fsck -f $@-t
+	resize2fs $@-t
 	virt-customize -a $@-t \
 	    --firstboot stage4-bootstrap.sh \
 	    --copy-in 50-wired.network:/var/tmp \
@@ -91,6 +94,9 @@ boot-stage4-in-qemu: stage4-test.img
 stage4-test.img: stage4-disk.img
 	rm -f $@ $@-t
 	cp $< $@-t
+	truncate -s 20G $@-t
+	e2fsck -f $@-t
+	resize2fs $@-t
 	mv $@-t $@
 
 # Upload the new stage4 disk image.

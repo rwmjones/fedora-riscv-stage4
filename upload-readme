@@ -6,6 +6,23 @@ https://fedorapeople.org/groups/risc-v/SRPMS/
 https://github.com/rwmjones/fedora-riscv-stage4
 https://github.com/rwmjones/fedora-riscv-kernel
 
+Uncompressing and resizing the disk
+-----------------------------------
+
+The disk image virtual size is 4G.  If you need more space you must
+resize it offline like this:
+
+  unxz --keep stage4-disk.img.xz
+  truncate -s 20G stage4-disk.img
+  e2fsck -f stage4-disk.img
+  resize2fs stage4-disk.img
+
+If you are writing the disk image to an SD card you could do:
+
+  xzcat stage4-disk.img.xz > /dev/sdX
+  e2fsck -f stage4-disk.img
+  resize2fs /dev/sdX
+
 QEMU
 ----
 
