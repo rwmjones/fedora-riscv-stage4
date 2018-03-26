@@ -2,6 +2,8 @@
 Welcome to the Fedora/RISC-V stage4 disk image
 https://fedoraproject.org/wiki/Architectures/RISC-V
 
+Build date: @DATE@
+
 Kernel \r on an \m (\l)
 
 The root password is ‘riscv’.

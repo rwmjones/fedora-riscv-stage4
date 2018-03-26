@@ -40,12 +40,14 @@ stage4-disk.img: stage4-builder.img
 	mv $@-t $@
 
 # This is the modified stage4 which builds a new stage4.
-stage4-builder.img: $(old_stage4) stage4-bootstrap.sh 50-wired.network stage4.repo local.repo issue rdate.service
+BUILD_DATE = $(shell date +"%Y-%m-%d %H:%M")
+stage4-builder.img: $(old_stage4) stage4-bootstrap.sh 50-wired.network stage4.repo local.repo issue.in rdate.service
 	rm -f $@ $@-t
 	cp $< $@-t
 	truncate -s 20G $@-t
 	e2fsck -f $@-t
 	resize2fs $@-t
+	sed 's/@DATE@/$(BUILD_DATE)/' < issue.in > issue
 	virt-customize -a $@-t \
 	    --firstboot stage4-bootstrap.sh \
 	    --copy-in 50-wired.network:/var/tmp \

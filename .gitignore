@@ -2,6 +2,7 @@
 
 /bbl
 /build.log
+/issue
 /old-stage4-disk.img*
 /RPMS
 /stage4-builder.img
